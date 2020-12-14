@@ -32,9 +32,9 @@ ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, long noOfPre
 }
 
 void ThreadedKD2TreeSerializer::serialize(char *out){
-    future<vector<shared_ptr<char[]>>> futures[threadedMatrices.size()];
+    future<vector<shared_ptr<unsigned char[]>>> futures[threadedMatrices.size()];
 
-    using TaskType = vector<shared_ptr<char[]>>(vector<long> , vector<LabledMatrix>);
+    using TaskType = vector<shared_ptr<unsigned char[]>>(vector<long> , vector<LabledMatrix>);
 
     for(int i=0;i<threadedMatrices.size();i++){
         packaged_task<TaskType> pt {&ThreadedKD2TreeSerializer::threadedCreation};
@@ -46,7 +46,7 @@ void ThreadedKD2TreeSerializer::serialize(char *out){
     outfile.open(out, ios::out | ios::trunc );
 
      for(int i=0;i<threadedMatrices.size();i++){
-         for(shared_ptr<char[]> treePtr : futures[i].get()){
+         for(shared_ptr<unsigned char[]> treePtr : futures[i].get()){
            outfile << treePtr.get();
         }
       }
@@ -54,12 +54,12 @@ void ThreadedKD2TreeSerializer::serialize(char *out){
     outfile.close();
 }
 
-vector<shared_ptr<char[]>> ThreadedKD2TreeSerializer::threadedCreation(vector<long> &use, vector<LabledMatrix> &matrices){
+vector<unsigned char*> ThreadedKD2TreeSerializer::threadedCreation(vector<long> &use, vector<LabledMatrix> &matrices){
     long x=0;
-    vector<shared_ptr<char[]>> trees = vector<shared_ptr<char[]>>();
+    vector<unsigned char*> trees = vector<unsigned char*>();
     for(long current : use){
         LabledMatrix &matrix = matrices[current];
-        shared_ptr<char[]> treePtr = createTree(matrix);
+        unsigned char* treePtr = createTree(matrix);
         trees.push_back(treePtr);
         x++;
         if(x%10==0) {
@@ -69,7 +69,9 @@ vector<shared_ptr<char[]>> ThreadedKD2TreeSerializer::threadedCreation(vector<lo
     return trees;
 }
 
-shared_ptr<char[]> ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
+
+
+unsigned char* ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
     TreeNode root = TreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
@@ -119,7 +121,72 @@ shared_ptr<char[]> ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
 
     }
     matrix.getPoints().clear();
-    //TODO merge
+
+    vector<vector<unsigned char>> hMap = vector<vector<unsigned char>>();
+    for(int i;i<h;i++){
+        hMap.push_back(vector<unsigned char>());
+    }
+    merge(root, hMap, 0, h);
+
+    vector<unsigned char> baos = vector<unsigned char>();
+    // convert from an unsigned long int to a 4-byte array
+    long label = matrix.getLabel();
+    baos.push_back((int)((label >> 24) & 0xFF));
+    baos.push_back((int)((label >> 16) & 0xFF)) ;
+    baos.push_back((int)((label >> 8) & 0XFF));
+    baos.push_back((int)((label & 0XFF)));
+
+
+    bool shift=true;
+    unsigned char last=0;
+    for(int i=0; i<hMap.size();i++){
+        for(unsigned char b : hMap[i]) {
+            //tree.addNodeNeighbor(b);
+            if(shift) {
+                last = b << 4;
+                shift=false;
+            }
+            else{
+                baos.push_back( last | b);
+                shift=true;
+            }
+        }
+        hMap[i].clear();
+    }
+    if(!shift){
+        baos.push_back(last);
+    }
+    baos.push_back(0);
+    hMap.clear();
+    return baos.data();
+}
+
+void merge(TreeNode &root, std::vector<vector<unsigned char>> hMap, int h, double max){
+    if(&root == nullptr || h>=max){
+        return;
+    }
+
+    vector<unsigned char> arr = hMap[h];
+    arr.push_back(root.getRawValue(true));
+    TreeNode c0 = root.getChild(0);
+    TreeNode c1 = root.getChild(1);
+    TreeNode c2 = root.getChild(2);
+    TreeNode c3 = root.getChild(3);
+    root.clear();
+
+    merge(c0, hMap, h+1, max);
+    merge(c1, hMap, h+1, max);
+    merge(c2, hMap, h+1, max);
+    merge(c3, hMap, h+1, max);
+}
+
+
+vector<unsigned char> intToBytes(int paramInt)
+{
+    vector<unsigned char> arrayOfByte(4);
+    for (int i = 0; i < 4; i++)
+        arrayOfByte[3 - i] = (paramInt >> (i * 8));
+    return arrayOfByte;
 }
 
 char ThreadedKD2TreeSerializer::getNode(Point &p, long c1, long r1, long c2, long r2){

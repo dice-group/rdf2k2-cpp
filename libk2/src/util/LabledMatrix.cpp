@@ -31,6 +31,10 @@ void LabledMatrix::set(long sID, long oID) {
     }
 }
 
+long LabledMatrix::getLabel() {
+    return pID;
+}
+
 vector<Point> LabledMatrix::getPoints(){
     return this->matrix;
 }

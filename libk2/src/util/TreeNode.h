@@ -13,11 +13,14 @@ class TreeNode {
 
 public:
     TreeNode setChildIfAbsent(int i, TreeNode &child);
-
+    TreeNode getChild(int i);
+    void clear();
+    unsigned char getRawValue(bool reverse);
 private:
     char value=0;
     TreeNode *parent;
     TreeNode *children[4] {nullptr,nullptr,nullptr,nullptr};
+
 };
 
 

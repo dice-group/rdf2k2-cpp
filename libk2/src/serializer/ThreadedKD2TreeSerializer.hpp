@@ -6,6 +6,7 @@
 #include <memory>
 #include "../util/LabledMatrix.h"
 #include "../util/Triple.h"
+#include "../util/TreeNode.h"
 
 
 class ThreadedKD2TreeSerializer {
@@ -19,9 +20,10 @@ class ThreadedKD2TreeSerializer {
         std::vector<Triple> triples;
         std::vector<LabledMatrix> matrices;
         std::vector<std::vector<long>> threadedMatrices;
-        std::vector<std::shared_ptr<char[]>> threadedCreation(std::vector<long> &use, std::vector<LabledMatrix> &matrices);
-        std::shared_ptr<char[]> createTree(LabledMatrix &matrix);
+        std::vector<unsigned char*> threadedCreation(std::vector<long> &use, std::vector<LabledMatrix> &matrices);
+        unsigned char* createTree(LabledMatrix &matrix);
         char getNode(Point &p, long c1, long r1, long c2, long r2);
+        void merge(TreeNode root, std::vector<vector<unsigned char>> hMap, int h, double max);
 };
 
 #endif //RDF2K2_CPP_ThreadedKD2TreeSerializer_H

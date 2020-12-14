@@ -12,3 +12,17 @@ TreeNode TreeNode::setChildIfAbsent(int i, TreeNode &child){
     }
     return *children[i];
 }
+
+void TreeNode::clear() {
+    *children[0];
+
+}
+
+unsigned char TreeNode::getRawValue(bool reverse) {
+    if (!reverse)
+        return value;
+    unsigned char ret = ret | (value & 8) / 8;
+    ret = ret | (value & 4) / 2;
+    ret = ret |(value & 2) * 2;
+    return ret |(value & 1) * 8;
+}

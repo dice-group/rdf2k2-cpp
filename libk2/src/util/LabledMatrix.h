@@ -16,6 +16,7 @@ public:
     void set(long sID, long oID);
     std::vector<Point> getPoints();
     double getH();
+    long getLabel();
 private:
     long pID;
     std::vector<Point> matrix;
