@@ -21,6 +21,7 @@ private:
     long pID;
     std::vector<Point> matrix;
     double h=-1;
+    long pointCount=0;
 };
 
 

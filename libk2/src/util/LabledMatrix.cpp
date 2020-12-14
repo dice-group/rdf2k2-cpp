@@ -14,7 +14,7 @@ LabledMatrix::LabledMatrix(long pID) {
 
 LabledMatrix::LabledMatrix(long pID, long size) {
     this->pID=pID;
-    this->matrix = vector<Point>();
+    this->matrix = vector<Point>(size);
 }
 
 LabledMatrix::LabledMatrix() {}
@@ -22,7 +22,7 @@ LabledMatrix::LabledMatrix() {}
 
 
 void LabledMatrix::set(long sID, long oID) {
-    matrix.push_back(Point(sID, oID));
+    matrix[pointCount++] =Point(sID, oID);
     if(sID>h){
         h = sID;
     }

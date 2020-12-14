@@ -14,10 +14,12 @@
 using namespace std;
 
 ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, long noOfPredicates, long noOfTriples) {
-    triples = std::vector<Triple>();
+    triples = std::vector<Triple>(noOfTriples);
     matrices = std::vector<LabledMatrix>(noOfPredicates);
-    int threads = std::thread::hardware_concurrency();
-
+    int threads=1;
+    if(threaded) {
+        threads = std::thread::hardware_concurrency();
+    }
     threadedMatrices = vector<vector<long>>(threads);
     int count=0;
     for(long i=0;i<threads;i++){
@@ -227,5 +229,5 @@ void ThreadedKD2TreeSerializer::flush() {
 
 void ThreadedKD2TreeSerializer::add(long sID, long pID, long oID){
     Triple triple = Triple(sID, pID, oID);
-    triples.push_back(triple);
+    triples[tripleCount++] = triple;
 }
