@@ -1,6 +1,6 @@
 #!/bin/bash
 
-path = $(pwd)
+path=$(pwd)
 mkdir hdttmp/
 cd hdttmp
 git clone https://github.com/rdfhdt/hdt-cpp/
