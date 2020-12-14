@@ -1,3 +1,6 @@
+#ifndef  RDF2K2_CPP_INTBASEDINDEXER_H
+#define RDF2K2_CPP_INTBASEDINDEXER_H
+
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -18,3 +21,5 @@ class IntBasedIndexer {
         shared_ptr<hdt::FourSectionDictionary> dictionary;
         shared_ptr<hdt::PlainDictionary> dict;
 };
+
+#endif //RDF2K2_CPP_INTBASEDINDEXER_H

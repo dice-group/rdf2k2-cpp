@@ -1,3 +1,6 @@
+#ifndef RDF2K2_CPP_RDFCOMPRESSOR_H
+#define RDF2K2_CPP_RDFCOMPRESSOR_H
+
 #include <Dictionary.hpp>
 #include <PlainDictionary.hpp>
 #include <FourSectionDictionary.hpp>
@@ -16,3 +19,5 @@ class RDFCompressor {
 
         hdt::RDFNotation guessNotation(const char *in);
 };
+
+#endif //RDF2K2_CPP_RDFCOMPRESSOR_H
