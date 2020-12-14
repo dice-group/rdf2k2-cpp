@@ -9,6 +9,8 @@
 #include <future>
 #include <functional>
 
+#include "../util/TreeNode.h"
+
 using namespace std;
 
 ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, long noOfPredicates, long noOfTriples) {
@@ -68,8 +70,7 @@ vector<shared_ptr<char[]>> ThreadedKD2TreeSerializer::threadedCreation(vector<lo
 }
 
 shared_ptr<char[]> ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
-    //TODO create TreeNode class
-    //TreeNode root = new TreeNode();
+    TreeNode root = TreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
     long mSize=matrix.getPoints().size();
@@ -82,7 +83,7 @@ shared_ptr<char[]> ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
         long r2=size;
         count++;
 
-        //TreeNode pnode = root;
+        TreeNode pnode = root;
 
         if(count % 100000 ==0){
             cout << "\r" << count << "/" << mSize << endl;
@@ -91,11 +92,11 @@ shared_ptr<char[]> ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
         for(int i=0;i<h;i++){
             char node = getNode(p, c1, r1, c2, r2);
 
-            //TreeNode cnode = new TreeNode();
+            TreeNode cnode = TreeNode();
 
-            //cnode = pnode.setChildIfAbsent(node, cnode);
-            //pnode = cnode;
-            //path.add(node);
+            cnode = pnode.setChildIfAbsent(node, cnode);
+            pnode = cnode;
+
             if(node==0){
                 r2 = (r2 - r1) / 2 + r1;
                 c2 = (c2 - c1) / 2 + c1;
