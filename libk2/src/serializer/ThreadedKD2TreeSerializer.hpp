@@ -17,7 +17,7 @@ class ThreadedKD2TreeSerializer {
         void add(long sID, long pID, long oID);
         ThreadedKD2TreeSerializer(bool threaded, long predicates, long triples);
         void flush();
-        void initSpace(std::shared_ptr<long []>sizeList);
+        void initSpace(std::vector<long> &sizeList);
         void threadedCreationThread(std::vector<long> &use, std::vector<LabledMatrix> &matrices, std::promise<vector<vector<unsigned char>>> promise);
 
     std::vector<std::vector<unsigned char>> threadedCreation(std::vector<long> &use, std::vector<LabledMatrix> &matrices);

@@ -7,19 +7,19 @@
 #include <PlainDictionary.hpp>
 #include <FourSectionDictionary.hpp>
 #include "../serializer/ThreadedKD2TreeSerializer.hpp"
-
+#include <RDFParser.hpp>
 using namespace std;
 
 class IntBasedIndexer {
     public:
-    IntBasedIndexer(shared_ptr<hdt::PlainDictionary> pDictionary, shared_ptr<hdt::FourSectionDictionary> pDict);
+    IntBasedIndexer(hdt::PlainDictionary *pDictionary, hdt::Dictionary * pDict);
     void load();
-    shared_ptr<long[]> indexTriples(char* rdfFile, ThreadedKD2TreeSerializer  *serializer, hdt::RDFNotation);
+    vector<long> indexTriples(char* rdfFile, ThreadedKD2TreeSerializer  *serializer, hdt::RDFNotation, hdt::RDFParserCallback *parser);
 
     private:
         long noOfPredicates;
-        shared_ptr<hdt::FourSectionDictionary> dictionary;
-        shared_ptr<hdt::PlainDictionary> dict;
+        hdt::Dictionary * dictionary;
+        hdt::PlainDictionary * dict;
 };
 
 #endif //RDF2K2_CPP_INTBASEDINDEXER_H

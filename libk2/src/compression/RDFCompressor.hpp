@@ -4,7 +4,7 @@
 #include <Dictionary.hpp>
 #include <PlainDictionary.hpp>
 #include <FourSectionDictionary.hpp>
-
+#include <RDFParser.hpp>
 
 class RDFCompressor {
     public: 
@@ -13,9 +13,9 @@ class RDFCompressor {
 
     private:
         bool threaded;
-        shared_ptr<hdt::PlainDictionary> dict;
-        shared_ptr<hdt::FourSectionDictionary> dictionary;
-        long readFile(const char *in, hdt::RDFNotation);
+        hdt::PlainDictionary *dict;
+        hdt::Dictionary *dictionary;
+        long readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser);
 
         hdt::RDFNotation guessNotation(const char *in);
 };

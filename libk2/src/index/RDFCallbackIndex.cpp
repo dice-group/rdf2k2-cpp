@@ -10,7 +10,7 @@
 using namespace hdt;
 
 
-RDFCallbackIndex::RDFCallbackIndex(shared_ptr<FourSectionDictionary> dict, ThreadedKD2TreeSerializer *serializer, shared_ptr<long[]> sizeList) {
+RDFCallbackIndex::RDFCallbackIndex(Dictionary * dict, ThreadedKD2TreeSerializer *serializer, vector<long> *sizeList) {
     this->dict=dict;
     this->serializer = serializer;
     this->sizeList = sizeList;
@@ -26,8 +26,8 @@ void RDFCallbackIndex::processTriple(const TripleString &triple, unsigned long l
     long pID = dict->stringToId(triple.getPredicate(), TripleComponentRole::PREDICATE);
     long oID = dict->stringToId(triple.getObject(), TripleComponentRole::OBJECT);
     serializer->add(sID-1, pID-1, oID-1);
-    long add =sizeList.get()[pID-1];
-    sizeList.get()[pID-1] = add+1;
+    long add = (*sizeList)[pID-1];
+    (*sizeList)[pID-1] = add+1;
 
     count++;
     if(count%100000==0){

@@ -12,9 +12,9 @@
 class Loader : public hdt::RDFCallback {
 
 public:
-    Loader(shared_ptr<hdt::ModifiableDictionary> dict1);
+    Loader(hdt::ModifiableDictionary *dict1);
     void processTriple(const hdt::TripleString &triple, unsigned long long pos) override;
-    shared_ptr<hdt::ModifiableDictionary> dict;
+    hdt::ModifiableDictionary *dict;
     long count;
     long getCount();
 };

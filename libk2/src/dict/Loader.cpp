@@ -7,16 +7,16 @@
 
 using namespace hdt;
 
-Loader::Loader( shared_ptr<hdt::ModifiableDictionary> dict) {
+Loader::Loader( hdt::ModifiableDictionary *dict) {
     this->dict = dict;
     this->count=0;
 }
 
 void Loader::processTriple(const TripleString &triple, unsigned long long pos) {
     //TODO BNodes
-    dict.get()->insert(triple.getSubject(), TripleComponentRole::SUBJECT);
-    dict.get()->insert(triple.getPredicate(), TripleComponentRole::PREDICATE);
-    dict.get()->insert(triple.getObject(), TripleComponentRole::OBJECT);
+    dict->insert(triple.getSubject(), TripleComponentRole::SUBJECT);
+    dict->insert(triple.getPredicate(), TripleComponentRole::PREDICATE);
+    dict->insert(triple.getObject(), TripleComponentRole::OBJECT);
 
     count++;
     if(count%100000==0){

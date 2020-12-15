@@ -17,17 +17,20 @@ using namespace std;
 
 RDFCompressor::RDFCompressor(bool threaded) {
             this->threaded = threaded;
-            this->dict = make_shared<hdt::PlainDictionary>();
-            this->dictionary = make_shared<hdt::FourSectionDictionary>();
-
+            this->dict = new hdt::PlainDictionary();
+            this->dictionary = new hdt::FourSectionDictionary();
 }
 
 
 void RDFCompressor::compressRDF(char *in, char *out){
 
             hdt::RDFNotation notation = guessNotation(in);
+            hdt::RDFParserCallback *parser = hdt::RDFParserCallback::getParserCallback(notation);
+
             chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();
-            long triples = readFile(in, notation);
+
+
+            long triples = readFile(in, notation, parser);
             cout << "read " << triples << " triples" << endl;
             chrono::high_resolution_clock::time_point end = chrono::high_resolution_clock::now();            
             chrono::duration<double, milli> time_span = end - start;
@@ -38,7 +41,7 @@ void RDFCompressor::compressRDF(char *in, char *out){
             IntBasedIndexer index = IntBasedIndexer(dict, dictionary);
 
             ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded,dict->getNpredicates(), triples);
-            shared_ptr<long[]> sizeList = index.indexTriples(in, serializer, notation);
+            vector<long> sizeList = index.indexTriples(in, serializer, notation, parser);
 
             hdt::ControlInformation ci = hdt::ControlInformation();
             ci.setType(hdt::ControlInformationType::DICTIONARY);
@@ -55,14 +58,13 @@ void RDFCompressor::compressRDF(char *in, char *out){
             serializer->serialize(out);
         }
 
-long RDFCompressor::readFile(const char *in, hdt::RDFNotation notation){
+long RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser){
             long triples = 0;
             //TODO guess notation
 
-            hdt::RDFParserCallback *parser = hdt::RDFParserCallback::getParserCallback(notation);
             Loader callback(dict);
-            dict.get()->startProcessing();
-            parser->doParse(in, "<base>", notation, false, &callback);
+            dict->startProcessing();
+            parser->doParse(in, "<http://base.com>", notation, true, &callback);
             triples = callback.getCount();
             cout << "\rLoaded " << triples << " triples in total." << endl;
             dict->stopProcessing();

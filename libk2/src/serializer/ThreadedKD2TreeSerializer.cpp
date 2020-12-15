@@ -217,7 +217,7 @@ char ThreadedKD2TreeSerializer::getNode(Point &p, long c1, long r1, long c2, lon
     }
 }
 
-void ThreadedKD2TreeSerializer::initSpace(shared_ptr<long[]> sizeList) {
+void ThreadedKD2TreeSerializer::initSpace(vector<long> &sizeList) {
     for(int i=0;i<matrices.size();i++){
         matrices[i]=(LabledMatrix(i, sizeList[i]));
     }
