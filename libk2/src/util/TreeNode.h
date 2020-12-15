@@ -12,8 +12,8 @@ using namespace std;
 class TreeNode {
 
 public:
-    TreeNode setChildIfAbsent(int i, TreeNode &child);
-    TreeNode getChild(int i);
+    TreeNode *setChildIfAbsent(int i, TreeNode *child);
+    TreeNode *getChild(int i);
     void clear();
     unsigned char getRawValue(bool reverse);
 private:

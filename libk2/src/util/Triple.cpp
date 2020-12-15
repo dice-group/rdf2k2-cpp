@@ -10,6 +10,9 @@ Triple::Triple(long s, long p, long o) {
     oID=o;
 }
 
+
+Triple::Triple() {}
+
 long Triple::get(int i) {
     if(i==0){
         return sID;

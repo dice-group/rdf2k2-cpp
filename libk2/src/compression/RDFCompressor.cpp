@@ -37,12 +37,12 @@ void RDFCompressor::compressRDF(char *in, char *out){
 
             IntBasedIndexer index = IntBasedIndexer(dict, dictionary);
 
-            shared_ptr<ThreadedKD2TreeSerializer> serializer = make_shared<ThreadedKD2TreeSerializer>(threaded,dictionary->getNpredicates(), triples);
+            ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded,dict->getNpredicates(), triples);
             shared_ptr<long[]> sizeList = index.indexTriples(in, serializer, notation);
 
             hdt::ControlInformation ci = hdt::ControlInformation();
             ci.setType(hdt::ControlInformationType::DICTIONARY);
-            char * dictOut;
+            char dictOut[strlen(out)+5];
             strcpy(dictOut, out);
             strcat(dictOut, ".dict");
             ofstream outfile;
@@ -70,7 +70,7 @@ long RDFCompressor::readFile(const char *in, hdt::RDFNotation notation){
         }
 
         hdt::RDFNotation RDFCompressor::guessNotation(const char *in){
-            const char* ptr = strchr(in, '.')+1;
+            const char* ptr = strrchr(in, '.')+1;
 
             if(strcmp(ptr, "nt")==0){
                 return hdt::RDFNotation::NTRIPLES;

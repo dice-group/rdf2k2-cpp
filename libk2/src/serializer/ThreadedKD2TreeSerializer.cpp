@@ -20,7 +20,7 @@ ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, long noOfPre
     if(threaded) {
         threads = std::thread::hardware_concurrency();
     }
-    threadedMatrices = vector<vector<long>>(threads);
+    threadedMatrices = vector<vector<long>>();
     int count=0;
     for(long i=0;i<threads;i++){
         threadedMatrices.push_back(vector<long>());
@@ -33,35 +33,44 @@ ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, long noOfPre
     }
 }
 
-void ThreadedKD2TreeSerializer::serialize(char *out){
-    future<vector<shared_ptr<unsigned char[]>>> futures[threadedMatrices.size()];
 
-    using TaskType = vector<shared_ptr<unsigned char[]>>(vector<long> , vector<LabledMatrix>);
+
+void ThreadedKD2TreeSerializer::serialize(char *out){
+    future<vector<vector<unsigned char>>> futures[threadedMatrices.size()];
 
     for(int i=0;i<threadedMatrices.size();i++){
-        packaged_task<TaskType> pt {&ThreadedKD2TreeSerializer::threadedCreation};
+        promise<vector<vector<unsigned char>>> pt;
         futures[i] = pt.get_future();
-        thread thr {move(pt), threadedMatrices[i], matrices};
+        thread thr {&ThreadedKD2TreeSerializer::threadedCreationThread, this, ref(threadedMatrices[i]), ref(matrices), move(pt)};
+        thr.detach();
     }
 
     ofstream outfile;
     outfile.open(out, ios::out | ios::trunc );
 
      for(int i=0;i<threadedMatrices.size();i++){
-         for(shared_ptr<unsigned char[]> treePtr : futures[i].get()){
-           outfile << treePtr.get();
+         vector<vector<unsigned char>> threadPtr = futures[i].get();
+         for(vector<unsigned char> treePtr : threadPtr){
+             for(unsigned char b : treePtr) {
+                 outfile << b;
+             }
         }
       }
-
+    outfile.flush();
     outfile.close();
 }
 
-vector<unsigned char*> ThreadedKD2TreeSerializer::threadedCreation(vector<long> &use, vector<LabledMatrix> &matrices){
+void ThreadedKD2TreeSerializer::threadedCreationThread(vector<long> &use, vector<LabledMatrix> &matrices, promise<vector<vector<unsigned char>>> promise) {
+    vector<vector<unsigned char>> vec = threadedCreation(use, matrices);
+    promise.set_value(vec);
+}
+
+vector<vector<unsigned char>> ThreadedKD2TreeSerializer::threadedCreation(vector<long> &use, vector<LabledMatrix> &matrices){
     long x=0;
-    vector<unsigned char*> trees = vector<unsigned char*>();
+    vector<vector<unsigned char>> trees = vector<vector<unsigned char>>();
     for(long current : use){
         LabledMatrix &matrix = matrices[current];
-        unsigned char* treePtr = createTree(matrix);
+        vector<unsigned char> treePtr = createTree(matrix);
         trees.push_back(treePtr);
         x++;
         if(x%10==0) {
@@ -73,8 +82,8 @@ vector<unsigned char*> ThreadedKD2TreeSerializer::threadedCreation(vector<long> 
 
 
 
-unsigned char* ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
-    TreeNode root = TreeNode();
+vector<unsigned char> ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
+    TreeNode *root = new TreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
     long mSize=matrix.getPoints().size();
@@ -87,7 +96,7 @@ unsigned char* ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
         long r2=size;
         count++;
 
-        TreeNode pnode = root;
+        TreeNode *pnode = root;
 
         if(count % 100000 ==0){
             cout << "\r" << count << "/" << mSize << endl;
@@ -96,9 +105,9 @@ unsigned char* ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
         for(int i=0;i<h;i++){
             char node = getNode(p, c1, r1, c2, r2);
 
-            TreeNode cnode = TreeNode();
+            TreeNode *cnode = new TreeNode();
 
-            cnode = pnode.setChildIfAbsent(node, cnode);
+            cnode = pnode->setChildIfAbsent(node, cnode);
             pnode = cnode;
 
             if(node==0){
@@ -125,7 +134,7 @@ unsigned char* ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
     matrix.getPoints().clear();
 
     vector<vector<unsigned char>> hMap = vector<vector<unsigned char>>();
-    for(int i;i<h;i++){
+    for(int i=0;i<h;i++){
         hMap.push_back(vector<unsigned char>());
     }
     merge(root, hMap, 0, h);
@@ -160,21 +169,21 @@ unsigned char* ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix){
     }
     baos.push_back(0);
     hMap.clear();
-    return baos.data();
+    return baos;
 }
 
-void merge(TreeNode &root, std::vector<vector<unsigned char>> hMap, int h, double max){
-    if(&root == nullptr || h>=max){
+void ThreadedKD2TreeSerializer::merge(TreeNode *root, std::vector<vector<unsigned char>> &hMap, int h, double max){
+    if(root == nullptr || h>=max){
         return;
     }
 
-    vector<unsigned char> arr = hMap[h];
-    arr.push_back(root.getRawValue(true));
-    TreeNode c0 = root.getChild(0);
-    TreeNode c1 = root.getChild(1);
-    TreeNode c2 = root.getChild(2);
-    TreeNode c3 = root.getChild(3);
-    root.clear();
+    vector<unsigned char> *arr = &hMap[h];
+    arr->push_back(root->getRawValue(true));
+    TreeNode *c0 = root->getChild(0);
+    TreeNode *c1 = root->getChild(1);
+    TreeNode *c2 = root->getChild(2);
+    TreeNode *c3 = root->getChild(3);
+    root->clear();
 
     merge(c0, hMap, h+1, max);
     merge(c1, hMap, h+1, max);
@@ -209,8 +218,8 @@ char ThreadedKD2TreeSerializer::getNode(Point &p, long c1, long r1, long c2, lon
 }
 
 void ThreadedKD2TreeSerializer::initSpace(shared_ptr<long[]> sizeList) {
-    for(int i=0;i<sizeof(sizeList.get())/sizeof(sizeList[0]);i++){
-        matrices.push_back(LabledMatrix(i, sizeList[i]));
+    for(int i=0;i<matrices.size();i++){
+        matrices[i]=(LabledMatrix(i, sizeList[i]));
     }
 }
 

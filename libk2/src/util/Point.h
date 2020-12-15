@@ -9,6 +9,7 @@
 class Point {
 public:
     Point(long sID, long oID);
+    Point();
     long getCol();
     long getRow();
 private:

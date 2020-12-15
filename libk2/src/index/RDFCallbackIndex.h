@@ -14,11 +14,11 @@ class RDFCallbackIndex : public hdt::RDFCallback {
 public:
 
     void processTriple(const hdt::TripleString &triple, unsigned long long pos) override;
-    RDFCallbackIndex(shared_ptr<hdt::FourSectionDictionary> dict, shared_ptr<ThreadedKD2TreeSerializer> serializer, shared_ptr<long[]> sizeList);
+    RDFCallbackIndex(shared_ptr<hdt::FourSectionDictionary> dict, ThreadedKD2TreeSerializer *serializer, shared_ptr<long[]> sizeList);
     long getCount();
 private:
     shared_ptr<hdt::FourSectionDictionary> dict;
-    shared_ptr<ThreadedKD2TreeSerializer> serializer;
+    ThreadedKD2TreeSerializer *serializer;
     shared_ptr<long[]> sizeList;
     long count;
 };

@@ -14,7 +14,7 @@ class IntBasedIndexer {
     public:
     IntBasedIndexer(shared_ptr<hdt::PlainDictionary> pDictionary, shared_ptr<hdt::FourSectionDictionary> pDict);
     void load();
-    shared_ptr<long[]> indexTriples(char* rdfFile, shared_ptr<ThreadedKD2TreeSerializer> serializer, hdt::RDFNotation);
+    shared_ptr<long[]> indexTriples(char* rdfFile, ThreadedKD2TreeSerializer  *serializer, hdt::RDFNotation);
 
     private:
         long noOfPredicates;

@@ -9,6 +9,8 @@ Point::Point(long sID, long oID) {
     this->oID=oID;
 }
 
+Point::Point() {}
+
 long Point::getCol() {
     return oID;
 }

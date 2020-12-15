@@ -5,6 +5,7 @@
 #include "LabledMatrix.h"
 #include <vector>
 #include "Point.h"
+#include <math.h>
 using namespace std;
 
 LabledMatrix::LabledMatrix(long pID) {
@@ -40,5 +41,5 @@ vector<Point> LabledMatrix::getPoints(){
 }
 
 double LabledMatrix::getH(){
-    return h;
+    return ceil(log2(h+1));
 }

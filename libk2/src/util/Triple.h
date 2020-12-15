@@ -9,6 +9,7 @@
 class Triple {
 public:
     Triple(long s, long p, long o);
+    Triple();
     long get(int i);
 
 private:
