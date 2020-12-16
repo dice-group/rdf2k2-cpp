@@ -5,7 +5,7 @@
 
 #include "TreeNode.h"
 
-TreeNode *TreeNode::setChildIfAbsent(int i, TreeNode *child){
+shared_ptr<TreeNode> TreeNode::setChildIfAbsent(int i, shared_ptr<TreeNode> child){
     if(children[i]==nullptr) {
         value+=pow(2, i);
         children[i] = child;
@@ -14,11 +14,13 @@ TreeNode *TreeNode::setChildIfAbsent(int i, TreeNode *child){
 }
 
 void TreeNode::clear() {
-    *children[0];
-
+    children[0] = nullptr;
+    children[1] = nullptr;
+    children[2] = nullptr;
+    children[3] = nullptr;
 }
 
-TreeNode * TreeNode::getChild(int i) {
+shared_ptr<TreeNode> TreeNode::getChild(int i) {
     return children[i];
 
 }

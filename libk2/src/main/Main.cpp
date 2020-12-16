@@ -35,8 +35,13 @@ void compress(char *in, char *out, bool threaded){
     compressor->compressRDF(in, out);
     chrono::high_resolution_clock::time_point end = chrono::high_resolution_clock::now();     
     chrono::duration<double, milli> time_span = end - start;
-    double ratio = getFileSize(out) * 1.0/ getFileSize(in); 
-    cout << "Finished compression to " << out << " took " << time_span.count() << "ms " << " with a " << ratio << " ratio" << endl;
+    long totalFileSize = getFileSize(out);
+    char dictOut[sizeof(out)+5];
+    strcpy(dictOut,out);
+    strcat(dictOut, ".dict");
+    totalFileSize += getFileSize(dictOut);
+    double ratio = totalFileSize* 1.0/ getFileSize(in);
+    cout << "Finished compression to " << out << "[.dict] took " << time_span.count() << "ms " << " with a " << ratio << " ratio" << endl;
 }
 
 void decompress(char *in, char *out, bool threaded, string format){

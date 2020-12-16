@@ -11,7 +11,9 @@
 #include <FourSectionDictionary.hpp>
 #include <string.h>
 
+#include "../util/Stats.h"
 #include "../dict/Loader.h"
+
 
 using namespace std;
 
@@ -23,7 +25,7 @@ RDFCompressor::RDFCompressor(bool threaded) {
 
 
 void RDFCompressor::compressRDF(char *in, char *out){
-
+        printMem("Start: ");
             hdt::RDFNotation notation = guessNotation(in);
             hdt::RDFParserCallback *parser = hdt::RDFParserCallback::getParserCallback(notation);
 
@@ -31,37 +33,51 @@ void RDFCompressor::compressRDF(char *in, char *out){
 
 
             long triples = readFile(in, notation, parser);
-            cout << "read " << triples << " triples" << endl;
+
             chrono::high_resolution_clock::time_point end = chrono::high_resolution_clock::now();            
             chrono::duration<double, milli> time_span = end - start;
-            cout << "Reading took " << time_span.count() << "ms" << endl; 
-            long noOfPredicates = 0;
+            cout << "Reading took " << time_span.count() << "ms" << endl;
+            printMem();
 
-
+            start = chrono::high_resolution_clock::now();
             IntBasedIndexer index = IntBasedIndexer(dict, dictionary);
 
             ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded,dict->getNpredicates(), triples);
             vector<long> sizeList = index.indexTriples(in, serializer, notation, parser);
+            end = chrono::high_resolution_clock::now();
+            time_span = end - start;
+            cout << "Indexing took " << time_span.count() << "ms" << endl;
+    printMem();
 
-            hdt::ControlInformation ci = hdt::ControlInformation();
+    hdt::ControlInformation ci = hdt::ControlInformation();
             ci.setType(hdt::ControlInformationType::DICTIONARY);
             char dictOut[strlen(out)+5];
             strcpy(dictOut, out);
             strcat(dictOut, ".dict");
             ofstream outfile;
             outfile.open(dictOut, ios::out | ios::trunc );
+    printMem("Before Dict save: ");
             dictionary->save(outfile, ci);
-            outfile.close();
-            serializer->initSpace(sizeList);
-            serializer->flush();
 
-            serializer->serialize(out);
+            delete dictionary;
+            outfile.close();
+    printMem("After Dict save: ");
+            serializer->initSpace(sizeList);
+            sizeList.clear();
+    start = chrono::high_resolution_clock::now();
+
+            serializer->flush();
+    printMem("Serializer Flush: ");
+            serializer->serializeMtx(out);
+    end = chrono::high_resolution_clock::now();
+    delete serializer;
+    time_span = end - start;
+    cout << "serialization took " << time_span.count() << "ms" << endl;
+    printMem("End:");
         }
 
 long RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser){
             long triples = 0;
-            //TODO guess notation
-
             Loader callback(dict);
             dict->startProcessing();
             parser->doParse(in, "<http://base.com>", notation, true, &callback);

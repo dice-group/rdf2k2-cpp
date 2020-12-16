@@ -34,6 +34,7 @@ vector<long> IntBasedIndexer::indexTriples(char* rdfFile, ThreadedKD2TreeSeriali
 void IntBasedIndexer::load() {
     if(dictionary->getType()!=hdt::HDTVocabulary::DICTIONARY_TYPE_PLAIN) {
         dictionary->import(dict);
+
         delete dict;
     }
     else{

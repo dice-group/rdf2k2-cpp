@@ -43,3 +43,8 @@ vector<Point> LabledMatrix::getPoints(){
 double LabledMatrix::getH(){
     return ceil(log2(h+1));
 }
+
+void LabledMatrix::clear() {
+    this->matrix.clear();
+
+}

@@ -17,6 +17,7 @@ public:
     std::vector<Point> getPoints();
     double getH();
     long getLabel();
+    void clear();
 private:
     long pID;
     std::vector<Point> matrix;
