@@ -14,7 +14,7 @@ public:
     LabledMatrix(long pID);
     LabledMatrix(long pID, long size);
     void set(long sID, long oID);
-    std::vector<Point> getPoints();
+    std::vector<Point> &getPoints();
     double getH();
     long getLabel();
     void clear();

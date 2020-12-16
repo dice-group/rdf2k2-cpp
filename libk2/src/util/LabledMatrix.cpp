@@ -10,7 +10,6 @@ using namespace std;
 
 LabledMatrix::LabledMatrix(long pID) {
     this->pID=pID;
-    this->matrix = vector<Point>();
 }
 
 LabledMatrix::LabledMatrix(long pID, long size) {
@@ -36,7 +35,7 @@ long LabledMatrix::getLabel() {
     return pID;
 }
 
-vector<Point> LabledMatrix::getPoints(){
+vector<Point> &LabledMatrix::getPoints(){
     return this->matrix;
 }
 

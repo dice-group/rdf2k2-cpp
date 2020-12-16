@@ -12,8 +12,8 @@ using namespace std;
 class TreeNode {
 
 public:
-    shared_ptr<TreeNode> setChildIfAbsent(int i, shared_ptr<TreeNode> &child);
-    shared_ptr<TreeNode> getChild(int i);
+    shared_ptr<TreeNode> &setChildIfAbsent(int i, shared_ptr<TreeNode> &child);
+    shared_ptr<TreeNode> &getChild(int i);
     void clear();
     unsigned char getRawValue(bool reverse);
 private:

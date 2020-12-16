@@ -43,7 +43,7 @@ void RDFCompressor::compressRDF(char *in, char *out){
             IntBasedIndexer index = IntBasedIndexer(dict, dictionary);
 
             ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded,dict->getNpredicates(), triples);
-            vector<long> sizeList = index.indexTriples(in, serializer, notation, parser);
+            vector<long> *sizeList = index.indexTriples(in, serializer, notation, parser);
             end = chrono::high_resolution_clock::now();
             time_span = end - start;
             cout << "Indexing took " << time_span.count() << "ms" << endl;
@@ -63,7 +63,8 @@ void RDFCompressor::compressRDF(char *in, char *out){
             outfile.close();
     printMem("After Dict save: ");
             serializer->initSpace(sizeList);
-            sizeList.clear();
+            sizeList->clear();
+            delete sizeList;
     start = chrono::high_resolution_clock::now();
 
             serializer->flush();

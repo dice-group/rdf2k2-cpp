@@ -146,7 +146,7 @@ unique_ptr<vector<unsigned char>> ThreadedKD2TreeSerializer::createTree(LabledMa
     long mSize=matrix.getPoints().size();
     long count=0;
 
-    for(Point p : matrix.getPoints()){
+    for(Point &p :matrix.getPoints()){
         long c1=0 ;
         long r1=0;
         long c2=size;
@@ -164,8 +164,7 @@ unique_ptr<vector<unsigned char>> ThreadedKD2TreeSerializer::createTree(LabledMa
 
             shared_ptr<TreeNode> cnode = make_shared<TreeNode>();
 
-            cnode = pnode->setChildIfAbsent(node, cnode);
-            pnode = cnode;
+            pnode = pnode->setChildIfAbsent(node, cnode);
 
             if(node==0){
                 r2 = (r2 - r1) / 2 + r1;
@@ -277,16 +276,16 @@ char ThreadedKD2TreeSerializer::getNode(Point &p, long c1, long r1, long c2, lon
     }
 }
 
-void ThreadedKD2TreeSerializer::initSpace(vector<long> &sizeList) {
+void ThreadedKD2TreeSerializer::initSpace(vector<long> *sizeList) {
     for(int i=0;i<matrices.size();i++){
-        matrices[i]=(LabledMatrix(i, sizeList[i]));
+        matrices[i]=LabledMatrix(i, (*sizeList)[i]);
     }
 }
 
 void ThreadedKD2TreeSerializer::flush() {
     long count=0;
     for(long i=0; i<triples.size(); i++){
-        Triple triple = triples[i];
+        Triple &triple = triples[i];
         matrices[triple.get(1)].set(triple.get(0), triple.get(2));
         count++;
         if(count %100000==0){
