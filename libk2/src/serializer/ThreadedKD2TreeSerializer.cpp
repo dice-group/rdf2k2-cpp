@@ -230,7 +230,7 @@ unique_ptr<vector<unsigned char>> ThreadedKD2TreeSerializer::createTree(LabledMa
     return baos;
 }
 
-void ThreadedKD2TreeSerializer::merge(shared_ptr<TreeNode> root, std::vector<vector<unsigned char>> &hMap, int h, double max){
+void ThreadedKD2TreeSerializer::merge(shared_ptr<TreeNode> &root, std::vector<vector<unsigned char>> &hMap, int h, double max){
     if(root == nullptr || h>=max){
         return;
     }
