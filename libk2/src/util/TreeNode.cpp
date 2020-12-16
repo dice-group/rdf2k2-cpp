@@ -5,10 +5,11 @@
 
 #include "TreeNode.h"
 
-shared_ptr<TreeNode> &TreeNode::setChildIfAbsent(int i, shared_ptr<TreeNode> &child){
-    if(children[i]==nullptr) {
+
+unique_ptr<TreeNode> &TreeNode::setChildIfAbsent(int i){
+    if(not (children[i])) {
         value+=pow(2, i);
-        children[i] = child;
+        children[i] = make_unique<TreeNode>();
     }
     return children[i];
 }
@@ -20,15 +21,16 @@ void TreeNode::clear() {
     children[3] = nullptr;
 }
 
-shared_ptr<TreeNode> &TreeNode::getChild(int i) {
+unique_ptr<TreeNode> &TreeNode::getChild(int i) {
     return children[i];
 
 }
 
-unsigned char TreeNode::getRawValue(bool reverse) {
+unsigned char TreeNode::getRawValue(bool reverse) const{
     if (!reverse)
         return value;
-    unsigned char ret = ret | ((value & 8) / 8);
+    unsigned char ret = 0;
+    ret = ret | ((value & 8) / 8);
     ret = ret | ((value & 4) / 2);
     ret = ret |((value & 2) * 2);
     ret = ret |((value & 1) * 8);

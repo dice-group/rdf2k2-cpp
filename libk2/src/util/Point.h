@@ -10,8 +10,8 @@ class Point {
 public:
     Point(long sID, long oID);
     Point();
-    long getCol();
-    long getRow();
+    long getCol() const;
+    long getRow() const;
 private:
     long sID;
     long oID;

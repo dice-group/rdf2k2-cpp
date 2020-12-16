@@ -12,14 +12,18 @@ using namespace std;
 class TreeNode {
 
 public:
-    shared_ptr<TreeNode> &setChildIfAbsent(int i, shared_ptr<TreeNode> &child);
-    shared_ptr<TreeNode> &getChild(int i);
+
+    unique_ptr<TreeNode> &setChildIfAbsent(int i);
+
+    unique_ptr<TreeNode> &getChild(int i);
+
     void clear();
-    unsigned char getRawValue(bool reverse);
+
+    [[nodiscard]] unsigned char getRawValue(bool reverse) const;
+
 private:
-    char value=0;
-    shared_ptr<TreeNode> parent;
-    shared_ptr<TreeNode> children[4] {nullptr,nullptr,nullptr,nullptr};
+    char value = 0;
+    unique_ptr<TreeNode> children[4]{nullptr, nullptr, nullptr, nullptr};
 
 };
 

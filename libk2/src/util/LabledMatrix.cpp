@@ -35,7 +35,7 @@ long LabledMatrix::getLabel() {
     return pID;
 }
 
-vector<Point> &LabledMatrix::getPoints(){
+const  vector<Point> &LabledMatrix::getPoints(){
     return this->matrix;
 }
 

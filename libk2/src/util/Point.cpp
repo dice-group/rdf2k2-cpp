@@ -11,10 +11,10 @@ Point::Point(long sID, long oID) {
 
 Point::Point() {}
 
-long Point::getCol() {
+long Point::getCol() const {
     return oID;
 }
 
-long Point::getRow() {
+long Point::getRow() const {
     return sID;
 }

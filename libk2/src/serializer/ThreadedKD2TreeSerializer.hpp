@@ -27,8 +27,8 @@ private:
         std::vector<LabledMatrix> matrices;
         std::vector<std::vector<long>> threadedMatrices;
         std::unique_ptr<std::vector<unsigned char>> createTree(LabledMatrix &matrix);
-        char getNode(Point &p, long c1, long r1, long c2, long r2);
-        void merge(shared_ptr<TreeNode> &root, std::vector<vector<unsigned char>> &hMap, int h, double max);
+        char getNode(const Point &p, long c1, long r1, long c2, long r2);
+        void merge(unique_ptr<TreeNode> &root, std::vector<vector<unsigned char>> &hMap, int h, double max);
         long tripleCount=0;
         mutex mtx;
     void writeTrees(vector<long> *use, vector<LabledMatrix> *matrices, ofstream &outfile, promise<void> pt);
