@@ -6,24 +6,24 @@
 #include "TreeNode.h"
 
 
-unique_ptr<TreeNode> &TreeNode::setChildIfAbsent(int i){
-    if(not (children[i])) {
+TreeNode *TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
+    if(children[i] == NO_CHILD_NODE) {
         value+=pow(2, i);
-        children[i] = make_unique<TreeNode>();
+        &treeNodeBuffer.constructTreeNode();
+        children[i] = treeNodeBuffer.lastPos();
     }
-    return children[i];
+    return &treeNodeBuffer.getTreeNode(children[i]);
 }
 
 void TreeNode::clear() {
-    children[0] = nullptr;
-    children[1] = nullptr;
-    children[2] = nullptr;
-    children[3] = nullptr;
+    children[0] = NO_CHILD_NODE;
+    children[1] = NO_CHILD_NODE;
+    children[2] = NO_CHILD_NODE;
+    children[3] = NO_CHILD_NODE;
 }
 
-unique_ptr<TreeNode> &TreeNode::getChild(int i) {
-    return children[i];
-
+TreeNode *TreeNode::getChild(int i, TreeNodeBuffer& treeNodeBuffer) {
+    return &treeNodeBuffer.getTreeNode(children[i]);
 }
 
 unsigned char TreeNode::getRawValue(bool reverse) const{
