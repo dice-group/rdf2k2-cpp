@@ -25,7 +25,7 @@ public:
 	explicit operator bool() const;
 
 	struct ValueType {
-		uint8_t value: 2 = 0;
+		char value:4 = 0;
 	} __attribute__((packed));
 
     class TreeNodeBuffer {

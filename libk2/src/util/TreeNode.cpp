@@ -12,7 +12,6 @@ TreeNode TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
 		treeNodeBuffer.getTreeNodeValue(*this).value +=pow(2, i);
 		child_node = treeNodeBuffer.constructTreeNode();
 		treeNodeBuffer.getTreeNodeChild(*this, i) = child_node;
-		return child_node;
     }
     return child_node;
 }
@@ -29,8 +28,8 @@ bool TreeNode::isLeaf(TreeNodeBuffer& treeNodeBuffer) {
     return !treeNodeBuffer.getTreeNodeValue(*this).value;
 }
 
-uint8_t TreeNode::getRawValue(bool reverse, TreeNodeBuffer& treeNodeBuffer) const{
-	uint8_t value =  treeNodeBuffer.getTreeNodeValue(*this).value;
+unsigned char TreeNode::getRawValue(bool reverse, TreeNodeBuffer& treeNodeBuffer) const{
+	char value =  treeNodeBuffer.getTreeNodeValue(*this).value;
     if (!reverse)
         return value;
     unsigned char ret = 0;
