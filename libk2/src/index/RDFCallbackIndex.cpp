@@ -21,7 +21,6 @@ RDFCallbackIndex::RDFCallbackIndex(Dictionary * dict, ThreadedKD2TreeSerializer 
 long RDFCallbackIndex::getCount() {return count;}
 
 void RDFCallbackIndex::processTriple(const TripleString &triple, unsigned long long pos) {
-    //TODO blank nodes
     long sID = dict->stringToId(triple.getSubject(), TripleComponentRole::SUBJECT);
     long pID = dict->stringToId(triple.getPredicate(), TripleComponentRole::PREDICATE);
     long oID = dict->stringToId(triple.getObject(), TripleComponentRole::OBJECT);

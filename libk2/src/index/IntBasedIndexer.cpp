@@ -17,15 +17,15 @@ IntBasedIndexer::IntBasedIndexer(hdt::PlainDictionary *pDictionary, hdt::Diction
 vector<long> *IntBasedIndexer::indexTriples(char* rdfFile, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
     //int ret[this->dict.get()->getNpredicates()];
 
-    load();
 
-    vector<long> *ret = new vector<long>(this->dictionary->getNpredicates());
-    for(unsigned int i=0;i<dictionary->getNpredicates(); i++){
+    vector<long> *ret = new vector<long>(this->dict->getNpredicates());
+    for(unsigned int i=0;i<dict->getNpredicates(); i++){
         (*ret)[i]=0;
     }
-    RDFCallbackIndex callback = RDFCallbackIndex(dictionary, serializer, ret);
+    RDFCallbackIndex callback = RDFCallbackIndex(dict, serializer, ret);
     parser->doParse(rdfFile, "<base>", notation, false, &callback);
     cout << "\rIndexed " << callback.getCount() << " triples in total. " << endl;
+    load();
 
     return ret;
 }
