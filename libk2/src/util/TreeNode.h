@@ -20,7 +20,9 @@ public:
 
 	TreeNode(size_t id);
 
-	operator size_t();
+	operator size_t() const;
+
+	explicit operator bool() const;
 
 	struct ValueType {
 		uint8_t value: 2 = 0;

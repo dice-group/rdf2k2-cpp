@@ -43,6 +43,10 @@ uint8_t TreeNode::getRawValue(bool reverse, TreeNodeBuffer& treeNodeBuffer) cons
 
 TreeNode::TreeNode(uint64_t id) : id(id) {}
 
-TreeNode::operator size_t() {
+TreeNode::operator size_t() const {
 	return id;
+}
+
+TreeNode::operator bool() const {
+	return id != NO_CHILD_NODE;
 }
