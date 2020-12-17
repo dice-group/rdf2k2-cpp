@@ -1,39 +1,36 @@
 //
 // Created by minimal on 12/14/20.
 //
-#include "math.h"
+#include <cmath>
 
 #include "TreeNode.h"
 
 
-TreeNode *TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
-    if(children[i] == NO_CHILD_NODE) {
-        value+=pow(2, i);
-        &treeNodeBuffer.constructTreeNode();
-        children[i] = treeNodeBuffer.lastPos();
+TreeNode TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
+	TreeNode child_node = treeNodeBuffer.getTreeNodeChild(*this, i);
+    if(child_node == NO_CHILD_NODE) {
+		treeNodeBuffer.getTreeNodeValue(*this).value +=pow(2, i);
+		child_node = treeNodeBuffer.constructTreeNode();
+		treeNodeBuffer.getTreeNodeChild(*this, i) = child_node;
+		return child_node;
     }
-    return &treeNodeBuffer.getTreeNode(children[i]);
+    return child_node;
 }
 
-void TreeNode::clear() {
-    children[0] = NO_CHILD_NODE;
-    children[1] = NO_CHILD_NODE;
-    children[2] = NO_CHILD_NODE;
-    children[3] = NO_CHILD_NODE;
+void TreeNode::clear(TreeNodeBuffer& treeNodeBuffer) {
+	treeNodeBuffer.clearTreeNode(*this);
 }
 
-TreeNode *TreeNode::getChild(int i, TreeNodeBuffer& treeNodeBuffer) {
-    if(children[i] == NO_CHILD_NODE){
-        return nullptr;
-    }
-    return &treeNodeBuffer.getTreeNode(children[i]);
+TreeNode TreeNode::getChild(int i, TreeNodeBuffer& treeNodeBuffer) {
+    return treeNodeBuffer.getTreeNodeChild(*this, i);
 }
 
-bool TreeNode::isLeaf() {
-    return !value;
+bool TreeNode::isLeaf(TreeNodeBuffer& treeNodeBuffer) {
+    return !treeNodeBuffer.getTreeNodeValue(*this).value;
 }
 
-unsigned char TreeNode::getRawValue(bool reverse) const{
+uint8_t TreeNode::getRawValue(bool reverse, TreeNodeBuffer& treeNodeBuffer) const{
+	uint8_t value =  treeNodeBuffer.getTreeNodeValue(*this).value;
     if (!reverse)
         return value;
     unsigned char ret = 0;
@@ -42,4 +39,10 @@ unsigned char TreeNode::getRawValue(bool reverse) const{
     ret = ret |((value & 2) * 2);
     ret = ret |((value & 1) * 8);
     return ret;
+}
+
+TreeNode::TreeNode(uint64_t id) : id(id) {}
+
+TreeNode::operator size_t() {
+	return id;
 }

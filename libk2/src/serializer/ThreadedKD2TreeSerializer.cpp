@@ -81,7 +81,7 @@ void ThreadedKD2TreeSerializer::writeTrees(vector<long> *use, vector<LabledMatri
 
 
 void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, ofstream &outfile){
-    treeNodeBuffer.constructTreeNode();
+	TreeNode root = treeNodeBuffer.constructTreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
     long mSize=matrix.getPoints().size();
@@ -94,7 +94,7 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
         long r2=size;
         count++;
 
-        TreeNode * pnode = &treeNodeBuffer.getTreeNode(0);;
+        TreeNode pnode = root;
 
         if(count % 100000 ==0){
             cout << "\r" << count << "/" << mSize << endl;
@@ -103,7 +103,7 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
         for(int i=0;i<h;i++){
             char node = getNode(p, c1, r1, c2, r2);
 
-            pnode = pnode->setChildIfAbsent(node, treeNodeBuffer);
+            pnode = pnode.setChildIfAbsent(node, treeNodeBuffer);
 
             if(node==0){
                 r2 = (r2 - r1) / 2 + r1;
@@ -140,7 +140,6 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
     unsigned char asH = h;
 
     atomic_uchar last = 0;
-    TreeNode *root = &treeNodeBuffer.getTreeNode(0);
     bool shift= true;
     shift = this->merge(root, baos, shift, last, treeNodeBuffer);
     if(!shift){
@@ -157,11 +156,11 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
     mtx.unlock();
 }
 
-bool ThreadedKD2TreeSerializer::merge(TreeNode *root, vector<unsigned char> &baos, bool shift, atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer){
-    if(!bool(root) || root->isLeaf()){
+bool ThreadedKD2TreeSerializer::merge(TreeNode root, vector<unsigned char> &baos, bool shift, atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer){
+    if(!bool(root) || root.isLeaf(treeNodeBuffer)){
         return shift;
     }
-    unsigned char b =root->getRawValue(true);
+    unsigned char b =root.getRawValue(true,treeNodeBuffer);
     if(shift) {
         last.store(b << 4);
         shift=false;
@@ -172,16 +171,16 @@ bool ThreadedKD2TreeSerializer::merge(TreeNode *root, vector<unsigned char> &bao
         last.store(0);
         shift=true;
     }
-    TreeNode * c0 = root->getChild(0, treeNodeBuffer);
-    TreeNode * c1 = root->getChild(1, treeNodeBuffer);
-    TreeNode * c2 = root->getChild(2, treeNodeBuffer);
-    TreeNode * c3 = root->getChild(3, treeNodeBuffer);
+    TreeNode c0 = root.getChild(0, treeNodeBuffer);
+    TreeNode c1 = root.getChild(1, treeNodeBuffer);
+    TreeNode c2 = root.getChild(2, treeNodeBuffer);
+    TreeNode c3 = root.getChild(3, treeNodeBuffer);
 
     shift = merge(c0, baos, shift, last, treeNodeBuffer);
     shift = merge(c1, baos,  shift, last, treeNodeBuffer);
     shift = merge(c2, baos,  shift, last, treeNodeBuffer);
     shift = merge(c3, baos,  shift, last, treeNodeBuffer);
-    root->clear();
+    root.clear(treeNodeBuffer);
     return shift;
 }
 
