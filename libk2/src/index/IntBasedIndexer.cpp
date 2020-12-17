@@ -4,7 +4,6 @@
 #include "RDFCallbackIndex.h"
 #include <FourSectionDictionary.hpp>
 #include "HDTVocabulary.hpp"
-#include "RDFParserSerd.hpp"
 
 using namespace std;
 
@@ -21,7 +20,7 @@ vector<long> *IntBasedIndexer::indexTriples(char* rdfFile, ThreadedKD2TreeSerial
     load();
 
     vector<long> *ret = new vector<long>(this->dictionary->getNpredicates());
-    for(int i=0;i<dictionary->getNpredicates(); i++){
+    for(unsigned int i=0;i<dictionary->getNpredicates(); i++){
         (*ret)[i]=0;
     }
     RDFCallbackIndex callback = RDFCallbackIndex(dictionary, serializer, ret);

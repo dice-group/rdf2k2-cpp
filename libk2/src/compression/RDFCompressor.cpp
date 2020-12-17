@@ -106,4 +106,5 @@ long RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDF
             if(strcmp(ptr, "rdf")==0 || strcmp(ptr, "xml")==0){
                 return hdt::RDFNotation::XML;
             }
+            throw std::logic_error{"Notation could not be guessed"};
         }

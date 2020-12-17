@@ -9,11 +9,11 @@ cd hdt-cpp
 ./autogen.sh
 
 ./configure --prefix=$path/libhdt/
-make
+make -j
 make install
 cp libhdt/src/dictionary/PlainDictionary.hpp $path/libhdt/include/
 cp libhdt/src/dictionary/FourSectionDictionary.hpp $path/libhdt/include/
-cp libhdt/src/libdcs/CSD.hpp $path/libhdt/include/
+cp libhdt/src/libdcs/CSD.h $path/libhdt/include/
 
 cd ../../
 rm -rf hdttmp/

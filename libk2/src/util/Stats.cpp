@@ -1,6 +1,7 @@
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <string>
 #include <iostream>
 #include <sys/sysinfo.h>
 #include "Stats.h"
@@ -50,7 +51,7 @@ long getVirtMemoryUsed(){
     return virtualMemUsed;
 }
 
-void printMem(char * prefix){
+void printMem(const std::string& prefix){
     long currentUsedVirtMemory = getVirtMemoryUsed();
     long totalVirtMemory = getTotalMemory();
     int procMem = getValue();

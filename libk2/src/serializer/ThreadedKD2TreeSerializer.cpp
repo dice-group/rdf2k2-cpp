@@ -61,7 +61,7 @@ void ThreadedKD2TreeSerializer::serializeMtx(char *out) {
 
 void ThreadedKD2TreeSerializer::writeTrees(vector<long> *use, vector<LabledMatrix> *matrices, ofstream &outfile, promise<void> pt){
     long x = 0;
-    for (long u = 0; u < use->size(); u++) {
+    for (unsigned long u = 0; u < use->size(); u++) {
         long current = (*use)[u];
         LabledMatrix matrix = (*matrices)[current];
         TreeNode::TreeNodeBuffer nodeBuffer{};
@@ -150,7 +150,7 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
     mtx.lock();
     outfile << matrix.getLabel();
     outfile << asH;
-    for (int j = 0; j < baos.size(); j++) {
+    for (unsigned int j = 0; j < baos.size(); j++) {
         outfile << baos[j];
     }
     mtx.unlock();
@@ -212,15 +212,14 @@ char ThreadedKD2TreeSerializer::getNode(const Point &p, long c1, long r1, long c
 }
 
 void ThreadedKD2TreeSerializer::initSpace(vector<long> *sizeList) {
-    for(int i=0;i<matrices.size();i++){
+    for(unsigned int i=0;i<matrices.size();i++){
         matrices[i]=LabledMatrix(i, (*sizeList)[i]);
     }
 }
 
 void ThreadedKD2TreeSerializer::flush() {
-    long count=0;
-    for(long i=0; i<triples.size(); i++){
-        Triple &triple = triples[i];
+    unsigned long count=0;
+    for(auto & triple : triples){
         matrices[triple.get(1)].set(triple.get(0), triple.get(2));
         count++;
         if(count %100000==0){
