@@ -13,13 +13,13 @@
 
 #include "../util/Stats.h"
 #include "../dict/Loader.h"
-
+#include "../dict/PlainDictionaryPlus.h"
 
 using namespace std;
 
 RDFCompressor::RDFCompressor(bool threaded) {
     this->threaded = threaded;
-    this->dict = new hdt::PlainDictionary();
+    this->dict = new PlainDictionaryPlus();
     this->dictionary = new hdt::FourSectionDictionary();
 }
 
@@ -32,7 +32,7 @@ void RDFCompressor::compressRDF(char *in, char *out) {
     chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();
 
 
-    shared_ptr<vector<DictEntryTriple>> triples = make_unique<vector<DictEntryTriple>>();
+    shared_ptr<vector<DictEntryTriple *>> triples = make_shared<vector<DictEntryTriple *>>();
     readFile(in, notation, parser, triples);
     size_t noOfTriples = triples->size();
 
@@ -47,6 +47,12 @@ void RDFCompressor::compressRDF(char *in, char *out) {
 
     ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded, dict->getNpredicates(), noOfTriples);
     vector<long> *sizeList = index.indexTriples(triples, in, serializer, notation, parser);
+    for(size_t x=0 ; x< triples->size(); x++){
+        (*triples)[x]->clear();
+        delete (*triples)[x];
+    }
+    triples->clear();
+    triples.reset();
     end = chrono::high_resolution_clock::now();
     time_span = end - start;
     cout << "Indexing took " << time_span.count() << "ms" << endl;
@@ -80,7 +86,7 @@ void RDFCompressor::compressRDF(char *in, char *out) {
     printMem("End:");
 }
 
-void RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, shared_ptr<vector<DictEntryTriple>> &tripleEntries) {
+void RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, shared_ptr<vector<DictEntryTriple *>> &tripleEntries) {
     long triples = 0;
     Loader callback(dict, tripleEntries);
     dict->startProcessing();

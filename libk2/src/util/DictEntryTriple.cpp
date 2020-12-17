@@ -23,3 +23,9 @@ hdt::DictionaryEntry * DictEntryTriple::getPredicate() const {
 hdt::DictionaryEntry * DictEntryTriple::getSubject() const {
     return this->subject;
 }
+
+void DictEntryTriple::clear() {
+    this->subject= nullptr;
+    this->predicate=nullptr;
+    this->object=nullptr;
+}

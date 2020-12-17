@@ -16,6 +16,8 @@ public:
     hdt::DictionaryEntry * getPredicate()const ;
     hdt::DictionaryEntry * getObject()const ;
 
+    void clear();
+
 private:
     hdt::DictionaryEntry *subject;
     hdt::DictionaryEntry *predicate;

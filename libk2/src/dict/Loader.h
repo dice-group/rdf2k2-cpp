@@ -11,16 +11,17 @@
 #include "../util/DictEntryTriple.h"
 #include <vector>
 #include <memory>
+#include "PlainDictionaryPlus.h"
 
 class Loader : public hdt::RDFCallback {
 
 public:
-    Loader(hdt::PlainDictionary *dict, shared_ptr<vector<DictEntryTriple>> &triplesA);
+    Loader(PlainDictionaryPlus *dict, shared_ptr<vector<DictEntryTriple *>> &triplesA);
     void processTriple(const hdt::TripleString &triple, unsigned long long pos) override;
-    hdt::PlainDictionary *dict;
+    PlainDictionaryPlus *dict;
     long count;
     long getCount();
-    std::shared_ptr<vector<DictEntryTriple>> triples;
+    std::shared_ptr<vector<DictEntryTriple *>> triples;
 
 private:
 

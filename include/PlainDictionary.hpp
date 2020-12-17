@@ -113,13 +113,14 @@ public:
 private:
 
     size_t mapping;
-	uint64_t sizeStrings;
 
-	//ControlInformation controlInformation;
+    //ControlInformation controlInformation;
 	HDTSpecification spec;
 
 // Public Interface
-public:
+    protected:
+        uint64_t sizeStrings;
+    public:
 	PlainDictionary();
 	PlainDictionary(HDTSpecification &spec);
 	~PlainDictionary();

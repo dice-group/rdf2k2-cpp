@@ -3,7 +3,7 @@ project(rdf2k2_cpp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-
+set(CMAKE_CXX_COMPILER clang++)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wextra -g -O0")
 
@@ -19,7 +19,7 @@ find_package( Threads )
 include_directories(libhdt/include/)
 
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "libk2/src/*.cpp")
-add_executable(rdf2k2_cpp "${PROJECT_SOURCE_DIR}/libk2/src/main/Main.cpp" ${SOURCES} libk2/src/index/RDFCallbackIndex.cpp libk2/src/index/RDFCallbackIndex.h libk2/src/util/LabledMatrix.cpp libk2/src/util/LabledMatrix.h libk2/src/util/Point.cpp libk2/src/util/Point.h libk2/src/util/Triple.cpp libk2/src/util/Triple.h)
+add_executable(rdf2k2_cpp "${PROJECT_SOURCE_DIR}/libk2/src/main/Main.cpp" ${SOURCES} libk2/src/index/RDFCallbackIndex.cpp libk2/src/index/RDFCallbackIndex.h libk2/src/util/LabledMatrix.cpp libk2/src/util/LabledMatrix.h libk2/src/util/Point.cpp libk2/src/util/Point.h libk2/src/util/Triple.cpp libk2/src/util/Triple.h libk2/src/util/DictEntryTriple.cpp libk2/src/util/DictEntryTriple.h libk2/src/dict/PlainDictionaryPlus.cpp libk2/src/dict/PlainDictionaryPlus.h)
 
 target_link_libraries(rdf2k2_cpp
         ${PROJECT_SOURCE_DIR}/libhdt/lib/libhdt.so.0

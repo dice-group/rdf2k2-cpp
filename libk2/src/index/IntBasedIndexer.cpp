@@ -14,15 +14,15 @@ IntBasedIndexer::IntBasedIndexer(hdt::PlainDictionary *pDictionary, hdt::Diction
     this->dictionary = pDict;
 }
 
-vector<long> *IntBasedIndexer::indexTriples(shared_ptr<vector<DictEntryTriple>> &triples, char* rdfFile, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
+vector<long> *IntBasedIndexer::indexTriples(shared_ptr<vector<DictEntryTriple *>> &triples, char* rdfFile, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
     //int ret[this->dict.get()->getNpredicates()];
     vector<long> *sizeList = new vector<long>(this->dict->getNpredicates());
 
     size_t count=0;
-    for(const DictEntryTriple &entry: *triples){
-        size_t pID = entry.getPredicate()->id;
+    for(const DictEntryTriple *entry: *triples){
+        size_t pID = entry->getPredicate()->id;
 
-        serializer->add(entry.getSubject()->id-1, pID-1, entry.getObject()->id-1);
+        serializer->add(entry->getSubject()->id-1, pID-1, entry->getObject()->id-1);
         long add = (*sizeList)[pID-1];
         (*sizeList)[pID-1] = add+1;
 
@@ -50,7 +50,6 @@ vector<long> *IntBasedIndexer::indexTriples(shared_ptr<vector<DictEntryTriple>> 
 void IntBasedIndexer::load() {
     if(dictionary->getType()!=hdt::HDTVocabulary::DICTIONARY_TYPE_PLAIN) {
         dictionary->import(dict);
-
         delete dict;
     }
     else{
