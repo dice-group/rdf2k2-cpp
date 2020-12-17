@@ -6,11 +6,13 @@
 #include "FourSectionDictionary.hpp"
 #include <memory>
 #include "../serializer/ThreadedKD2TreeSerializer.hpp"
+#include <iostream>
+#include <PlainDictionary.hpp>
 
 using namespace hdt;
 
 
-RDFCallbackIndex::RDFCallbackIndex(Dictionary * dict, ThreadedKD2TreeSerializer *serializer, vector<long> *sizeList) {
+RDFCallbackIndex::RDFCallbackIndex(PlainDictionary * dict, ThreadedKD2TreeSerializer *serializer, vector<long> *sizeList) {
     this->dict=dict;
     this->serializer = serializer;
     this->sizeList = sizeList;
@@ -21,6 +23,7 @@ RDFCallbackIndex::RDFCallbackIndex(Dictionary * dict, ThreadedKD2TreeSerializer 
 long RDFCallbackIndex::getCount() {return count;}
 
 void RDFCallbackIndex::processTriple(const TripleString &triple, unsigned long long pos) {
+
     long sID = dict->stringToId(triple.getSubject(), TripleComponentRole::SUBJECT);
     long pID = dict->stringToId(triple.getPredicate(), TripleComponentRole::PREDICATE);
     long oID = dict->stringToId(triple.getObject(), TripleComponentRole::OBJECT);

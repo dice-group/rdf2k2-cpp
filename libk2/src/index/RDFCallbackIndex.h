@@ -9,15 +9,16 @@
 #include <FourSectionDictionary.hpp>
 #include <memory>
 #include "../serializer/ThreadedKD2TreeSerializer.hpp"
+#include <PlainDictionary.hpp>
 
 class RDFCallbackIndex : public hdt::RDFCallback {
 public:
 
     void processTriple(const hdt::TripleString &triple, unsigned long long pos) override;
-    RDFCallbackIndex(hdt::Dictionary *dict, ThreadedKD2TreeSerializer *serializer, vector<long> *sizeList);
+    RDFCallbackIndex(hdt::PlainDictionary *dict, ThreadedKD2TreeSerializer *serializer, vector<long> *sizeList);
     long getCount();
 private:
-    hdt::Dictionary * dict;
+    hdt::PlainDictionary * dict;
     ThreadedKD2TreeSerializer *serializer;
     vector<long> *sizeList;
     long count;

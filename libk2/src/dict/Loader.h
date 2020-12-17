@@ -7,16 +7,23 @@
 #include <RDFParser.hpp>
 #include <Dictionary.hpp>
 #include <memory>
-
+#include <PlainDictionary.hpp>
+#include "../util/DictEntryTriple.h"
+#include <vector>
+#include <memory>
 
 class Loader : public hdt::RDFCallback {
 
 public:
-    Loader(hdt::ModifiableDictionary *dict1);
+    Loader(hdt::PlainDictionary *dict, shared_ptr<vector<DictEntryTriple>> &triplesA);
     void processTriple(const hdt::TripleString &triple, unsigned long long pos) override;
-    hdt::ModifiableDictionary *dict;
+    hdt::PlainDictionary *dict;
     long count;
     long getCount();
+    std::shared_ptr<vector<DictEntryTriple>> triples;
+
+private:
+
 };
 
 

@@ -68,7 +68,7 @@ void ThreadedKD2TreeSerializer::writeTrees(vector<long> *use, vector<LabledMatri
         createTree(matrix, nodeBuffer, outfile);
 
         x++;
-        if (x % 10 == 0) {
+        if (x % 100 == 0) {
             cout << "Created " << x << " k2 trees of " << use->size() << endl;
         }
     }
@@ -96,9 +96,6 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
 
         TreeNode pnode = root;
 
-        if(count % 100000 ==0){
-            cout << "\r" << count << "/" << mSize << endl;
-        }
 
         for(int i=0;i<h;i++){
             char node = getNode(p, c1, r1, c2, r2);

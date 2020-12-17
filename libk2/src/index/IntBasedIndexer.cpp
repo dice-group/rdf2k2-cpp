@@ -14,20 +14,37 @@ IntBasedIndexer::IntBasedIndexer(hdt::PlainDictionary *pDictionary, hdt::Diction
     this->dictionary = pDict;
 }
 
-vector<long> *IntBasedIndexer::indexTriples(char* rdfFile, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
+vector<long> *IntBasedIndexer::indexTriples(shared_ptr<vector<DictEntryTriple>> &triples, char* rdfFile, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
     //int ret[this->dict.get()->getNpredicates()];
+    vector<long> *sizeList = new vector<long>(this->dict->getNpredicates());
+
+    size_t count=0;
+    for(const DictEntryTriple &entry: *triples){
+        size_t pID = entry.getPredicate()->id;
+
+        serializer->add(entry.getSubject()->id-1, pID-1, entry.getObject()->id-1);
+        long add = (*sizeList)[pID-1];
+        (*sizeList)[pID-1] = add+1;
+
+        count++;
+        if(count%100000==0){
+            cout << "\rIndexed " << count << " triples.";
+        }
+    }
 
 
-    vector<long> *ret = new vector<long>(this->dict->getNpredicates());
+    /*
     for(unsigned int i=0;i<dict->getNpredicates(); i++){
         (*ret)[i]=0;
     }
+    cout << dict->subjects[0]->id << endl;
     RDFCallbackIndex callback = RDFCallbackIndex(dict, serializer, ret);
     parser->doParse(rdfFile, "<base>", notation, false, &callback);
     cout << "\rIndexed " << callback.getCount() << " triples in total. " << endl;
+     */
     load();
 
-    return ret;
+    return sizeList;
 }
 
 void IntBasedIndexer::load() {

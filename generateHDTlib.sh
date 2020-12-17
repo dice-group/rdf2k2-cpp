@@ -11,7 +11,7 @@ cd hdt-cpp
 ./configure --prefix=$path/libhdt/
 make -j
 make install
-cp libhdt/src/dictionary/PlainDictionary.hpp $path/libhdt/include/
+cp include/PlainDictionary.hpp $path/libhdt/include/
 cp libhdt/src/dictionary/FourSectionDictionary.hpp $path/libhdt/include/
 cp libhdt/src/libdcs/CSD.h $path/libhdt/include/
 

@@ -5,6 +5,7 @@
 #include <PlainDictionary.hpp>
 #include <FourSectionDictionary.hpp>
 #include <RDFParser.hpp>
+#include "../util/DictEntryTriple.h"
 
 class RDFCompressor {
     public: 
@@ -15,7 +16,7 @@ class RDFCompressor {
         bool threaded;
         hdt::PlainDictionary *dict;
         hdt::Dictionary *dictionary;
-        long readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser);
+        void readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser,shared_ptr<vector<DictEntryTriple>> &tripleEntries);
 
         hdt::RDFNotation guessNotation(const char *in);
 };
