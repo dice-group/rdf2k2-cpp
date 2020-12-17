@@ -43,14 +43,14 @@ public:
 
     [[nodiscard]] unsigned char getRawValue(bool reverse) const;
 
-
+    bool isLeaf();
 
 private:
     static constexpr size_t NO_CHILD_NODE = std::numeric_limits<size_t>::max();
     // uint32_t statt size_t könnte statt size_t verwendet werden um den Speicherbedarf auf ca. 3/5 zu senken
     size_t children[4]{NO_CHILD_NODE, NO_CHILD_NODE, NO_CHILD_NODE, NO_CHILD_NODE};
     // Für maximales Speicher sparen müsste das hier in ein eigenes Array ausgelagert werden.
-    char value = 0;
+    unsigned char value = 0;
 
     //11000000 00110000 00001100 00000011
 

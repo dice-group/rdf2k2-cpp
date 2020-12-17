@@ -23,7 +23,14 @@ void TreeNode::clear() {
 }
 
 TreeNode *TreeNode::getChild(int i, TreeNodeBuffer& treeNodeBuffer) {
+    if(children[i] == NO_CHILD_NODE){
+        return nullptr;
+    }
     return &treeNodeBuffer.getTreeNode(children[i]);
+}
+
+bool TreeNode::isLeaf() {
+    return !value;
 }
 
 unsigned char TreeNode::getRawValue(bool reverse) const{

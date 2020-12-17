@@ -11,6 +11,7 @@
 #include "../util/Stats.h"
 #include "../util/TreeNode.h"
 #include <mutex>          // std::mutex
+#include <atomic>
 
 using namespace std;
 
@@ -47,14 +48,13 @@ void ThreadedKD2TreeSerializer::serializeMtx(char *out) {
         futures.push_back(pt.get_future());
         thread thr {&ThreadedKD2TreeSerializer::writeTrees, this, &threadedMatrice, &matrices, ref(outfile), move(pt)};
         thr.detach();
-
+        //writeTrees(&threadedMatrice, &matrices, outfile, move(pt));
     }
 
     for (auto &future : futures) {
         future.get();
     }
     matrices.clear();
-    outfile.flush();
     outfile.close();
 }
 
@@ -65,14 +65,7 @@ void ThreadedKD2TreeSerializer::writeTrees(vector<long> *use, vector<LabledMatri
         long current = (*use)[u];
         LabledMatrix matrix = (*matrices)[current];
         TreeNode::TreeNodeBuffer nodeBuffer{};
-        unique_ptr<vector<unsigned char>> treePtr = createTree(matrix, nodeBuffer);
-
-        mtx.lock();
-        for (int j = 0; j < treePtr->size(); j++) {
-            outfile << (*treePtr)[j];
-        }
-        mtx.unlock();
-        treePtr->clear();
+        createTree(matrix, nodeBuffer, outfile);
 
         x++;
         if (x % 10 == 0) {
@@ -87,7 +80,7 @@ void ThreadedKD2TreeSerializer::writeTrees(vector<long> *use, vector<LabledMatri
 
 
 
-unique_ptr<vector<unsigned char>> ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer){
+void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, ofstream &outfile){
     treeNodeBuffer.constructTreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
@@ -134,69 +127,64 @@ unique_ptr<vector<unsigned char>> ThreadedKD2TreeSerializer::createTree(LabledMa
 
     }
     matrix.clear();
-
+/*
     vector<vector<unsigned char>> hMap = vector<vector<unsigned char>>();
     for(int i=0;i<h;i++){
         hMap.push_back(vector<unsigned char>());
     }
     TreeNode * root = &treeNodeBuffer.getTreeNode(0);
     merge(root, hMap, 0, h, treeNodeBuffer);
+*/
+    vector<unsigned char> baos = vector<unsigned char>();
 
-    unique_ptr<vector<unsigned char>> baos = make_unique<vector<unsigned char>>();
-    //vector<unsigned char> *baos = new vector<unsigned char>();
-    // convert from an unsigned long int to a 4-byte array
-    long label = matrix.getLabel();
-    baos->push_back((int)((label >> 24) & 0xFF));
-    baos->push_back((int)((label >> 16) & 0xFF)) ;
-    baos->push_back((int)((label >> 8) & 0XFF));
-    baos->push_back((int)((label & 0XFF)));
+    unsigned char asH = h;
 
-
-    bool shift=true;
-    unsigned char last=0;
-    for(int i=0; i<hMap.size();i++){
-        for(unsigned char b : hMap[i]) {
-            //tree.addNodeNeighbor(b);
-            if(shift) {
-                last = b << 4;
-                shift=false;
-            }
-            else{
-                baos->push_back( last | b);
-                shift=true;
-            }
-        }
-        hMap[i].clear();
-    }
+    atomic_uchar last = 0;
+    TreeNode *root = &treeNodeBuffer.getTreeNode(0);
+    bool shift= true;
+    shift = this->merge(root, baos, shift, last, treeNodeBuffer);
     if(!shift){
-        baos->push_back(last);
+        baos.push_back(last);
     }
-    baos->push_back(0);
-    hMap.clear();
-    return baos;
+
+    //Write evertyhing
+    mtx.lock();
+    outfile << matrix.getLabel();
+    outfile << asH;
+    for (int j = 0; j < baos.size(); j++) {
+        outfile << baos[j];
+    }
+    mtx.unlock();
 }
 
-void ThreadedKD2TreeSerializer::merge(TreeNode * root, std::vector<vector<unsigned char>> &hMap, int h, double max, TreeNode::TreeNodeBuffer& treeNodeBuffer){
-    // https://en.cppreference.com/w/cpp/memory/shared_ptr/operator_bool
-    if(bool(root) || h>=max){
-        return;
+bool ThreadedKD2TreeSerializer::merge(TreeNode *root, vector<unsigned char> &baos, bool shift, atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer){
+    if(!bool(root) || root->isLeaf()){
+        return shift;
     }
-
-    vector<unsigned char> &arr = hMap[h];
-    arr.push_back(root->getRawValue(true));
+    unsigned char b =root->getRawValue(true);
+    if(shift) {
+        last.store(b << 4);
+        shift=false;
+    }
+    else{
+        unsigned char write = last | b;
+        baos.push_back( write);
+        last.store(0);
+        shift=true;
+    }
     TreeNode * c0 = root->getChild(0, treeNodeBuffer);
     TreeNode * c1 = root->getChild(1, treeNodeBuffer);
     TreeNode * c2 = root->getChild(2, treeNodeBuffer);
     TreeNode * c3 = root->getChild(3, treeNodeBuffer);
 
-    merge(c0, hMap, h+1, max, treeNodeBuffer);
-    merge(c1, hMap, h+1, max, treeNodeBuffer);
-    merge(c2, hMap, h+1, max, treeNodeBuffer);
-    merge(c3, hMap, h+1, max, treeNodeBuffer);
+    shift = merge(c0, baos, shift, last, treeNodeBuffer);
+    shift = merge(c1, baos,  shift, last, treeNodeBuffer);
+    shift = merge(c2, baos,  shift, last, treeNodeBuffer);
+    shift = merge(c3, baos,  shift, last, treeNodeBuffer);
     root->clear();
-
-
+    return shift;
 }
+
 
 
 vector<unsigned char> intToBytes(int paramInt)

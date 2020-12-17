@@ -4,6 +4,7 @@
 
 #include "Loader.h"
 #include <memory>
+#include <string.h>
 
 using namespace hdt;
 
@@ -13,7 +14,6 @@ Loader::Loader( hdt::ModifiableDictionary *dict) {
 }
 
 void Loader::processTriple(const TripleString &triple, unsigned long long pos) {
-    //TODO BNodes
     dict->insert(triple.getSubject(), TripleComponentRole::SUBJECT);
     dict->insert(triple.getPredicate(), TripleComponentRole::PREDICATE);
     dict->insert(triple.getObject(), TripleComponentRole::OBJECT);
