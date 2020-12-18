@@ -42,8 +42,8 @@ Point Path::calculatePoint(){
             x;
         }
         u_char p =paths[i][paths[i].size()-1];
-        if(p==1){row+=pow(2, x);}
-        if(p==2){col+=pow(2, x);}
+        if(p==1){col+=pow(2, x);}
+        if(p==2){row+=pow(2, x);}
         if(p==3){row+=pow(2, x);col+=pow(2, x);}
         x++;
     }
@@ -59,12 +59,12 @@ void Path::add(u_int32_t i, u_char newpath){
     if(i>0 && paths[i-1].empty()){
         i;
     }
-    u_char x=0;
+    u_char x=3;
     for(u_char j=128;j>=16;j/=2){
         if(newpath & j){
             paths[i].push_back(x);
         }
-        x++;
+        x--;
     }
     //we were already at the last point
     if(i+1==h) {
@@ -72,24 +72,24 @@ void Path::add(u_int32_t i, u_char newpath){
         u_char newLast = newpath & 15;
         this->last=newLast;
     }else {
-        u_char x=0;
+        u_char x=3;
         for (u_char j = 8; j >= 1; j /= 2) {
             if(newpath & j){
                 this->paths[i+1].push_back(x);
             }
-            x++;
+            x--;
         }
     }
 
 }
 
 void Path::addLast(u_int32_t i){
-    u_char x=0;
+    u_char x=3;
     for (u_char j = 8; j >= 1; j /= 2) {
         if(last & j){
             this->paths[i].push_back(x);
         }
-        x++;
+        x--;
     }
     last='\00';
 }

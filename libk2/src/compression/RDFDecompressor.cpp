@@ -80,20 +80,26 @@ void  RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &dict){
 
 void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
     std::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
+    std::streampos size;
+
     if (file.is_open()) {
         //read long, read h
+        size = file.tellg();
         file.seekg(0, std::ios::beg);
 
         bool matrixEnd=false;
-        do {
+        char pLabel[sizeof(long)];
+        size_t count=0;
+        while (count<size){
             matrixEnd=false;
-            char pLabel[sizeof(long)];
             file.read((char *) &pLabel, sizeof(pLabel));
+            count+=sizeof(pLabel);
             long label = *((long *)pLabel);
             LabledMatrix matrix{label};
             //read n bytes
             char h[1];
             file.read((char *) h, 1);
+            count++;
             u_int32_t hSize = (u_int32_t) h[0];
 
             u_int32_t k = hSize;
@@ -113,6 +119,7 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                 char b[1];
                 for (int i = j; i < k; i += 2) {
                     file.read((char *) b, sizeof(u_char));
+                    count++;
                     p.add(i, b[0]);
                 }
 
@@ -132,7 +139,7 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                     matrices.push_back(matrix);
                 }
             } while (!matrixEnd);
-        } while (!file.eof());
+        } ;
         file.close();
     }
 }

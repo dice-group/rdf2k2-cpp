@@ -168,7 +168,7 @@ bool ThreadedKD2TreeSerializer::merge(TreeNode root, vector<unsigned char> &baos
     if(!bool(root) || root.isLeaf(treeNodeBuffer)){
         return shift;
     }
-    unsigned char b =root.getRawValue(true,treeNodeBuffer);
+    unsigned char b =root.getRawValue(false,treeNodeBuffer);
     if(shift) {
         last.store(b << 4);
         shift=false;
