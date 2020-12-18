@@ -5,6 +5,8 @@ mkdir hdttmp/
 cd hdttmp
 git clone https://github.com/rdfhdt/hdt-cpp/
 cd hdt-cpp
+cp ../../include/PlainDictionary.hpp libhdt/src/dictionary/
+
 ./gnulib.sh
 ./autogen.sh
 
