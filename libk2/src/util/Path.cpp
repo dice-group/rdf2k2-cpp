@@ -38,9 +38,6 @@ Point Path::calculatePoint(){
     long row=0, col=0;
     u_char x=0;
     for(int i=h-1;i>=0;i--){
-        if(paths[i].empty()){
-            x;
-        }
         u_char p =paths[i][paths[i].size()-1];
         if(p==1){col+=pow(2, x);}
         if(p==2){row+=pow(2, x);}

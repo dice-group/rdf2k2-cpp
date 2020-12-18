@@ -107,9 +107,6 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
             Path p{hSize};
             u_int32_t j = 0;
             int x=0;
-            if(label==184){
-                x;
-            }
             do {
                 if (p.hasLast()) {
 
