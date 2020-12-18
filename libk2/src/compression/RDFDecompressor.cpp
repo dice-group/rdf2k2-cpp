@@ -51,8 +51,28 @@ void RDFDecompressor::writeNTRIPLES(char *out, std::vector<LabledMatrix> &matric
         for(const Point &p : matrix.getPoints()) {
             std::string subject = dict.idToString(p.getRow()+1, hdt::TripleComponentRole::SUBJECT);
             std::string object = dict.idToString(p.getCol()+1, hdt::TripleComponentRole::OBJECT);
+            //TODO bnodes shouldn't be wrapped.
+            output << "<" << subject << "> <" << predicate << "> ";
+            if(object.starts_with("\"")){
+                //TODO cleanOUTPUT HDT removes \ from \"
+                auto last =object.find_last_of("\"")-1;
+                string test = object.substr(1, last);
+                if(test.find("\"")!=test.npos){
+                    size_t start_pos = 0;
+                    while((start_pos = test.find("\"", start_pos)) != std::string::npos) {
+                        test.replace(start_pos, 1, "\\\"");
+                        start_pos += 2; // In case 'to' contains 'from', like replacing 'x' with 'yx'
+                    }
+                    output << "\"" << test << object.substr(last) << " ." << std::endl;
 
-            output << "<" << subject << "> <" << predicate << "> " << object << "." << endl;
+                }
+                else {
+                    output << object << " ." << std::endl;
+                }
+            }else{
+               output << "<" << object << "> ." << std::endl;
+            }
+
         }
     }
     output.close();

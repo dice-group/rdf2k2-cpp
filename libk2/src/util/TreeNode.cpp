@@ -10,9 +10,6 @@ TreeNode TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
 	TreeNode child_node = treeNodeBuffer.getTreeNodeChild(*this, i);
     if(child_node == NO_CHILD_NODE) {
 		treeNodeBuffer.getTreeNodeValue(*this).value +=pow(2, i);
-		if(treeNodeBuffer.getTreeNodeValue(*this).value<0){
-		    child_node;
-		}
 		child_node = treeNodeBuffer.constructTreeNode();
 		treeNodeBuffer.getTreeNodeChild(*this, i) = child_node;
     }
