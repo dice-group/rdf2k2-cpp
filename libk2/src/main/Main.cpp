@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include "../compression/RDFCompressor.hpp"
+#include "../compression/RDFDecompressor.h"
 
 
 using namespace std;
@@ -30,7 +31,6 @@ long getFileSize(char *in){
 void compress(char *in, char *out, bool threaded){
     chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();            
     cout << "Starting compression for file " << in << endl;
-    cout << "Current path " << filesystem::current_path() << endl;
     RDFCompressor *compressor = new RDFCompressor(threaded);
     compressor->compressRDF(in, out);
     chrono::high_resolution_clock::time_point end = chrono::high_resolution_clock::now();     
@@ -45,7 +45,13 @@ void compress(char *in, char *out, bool threaded){
 }
 
 void decompress(char *in, char *out, bool threaded, string format){
-
+    chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();
+    cout << "Starting decompression for file " << in << endl;
+    RDFDecompressor *decompressor = new RDFDecompressor();
+    decompressor->writeRDF(in, out);
+    chrono::high_resolution_clock::time_point end = chrono::high_resolution_clock::now();
+    chrono::duration<double, milli> time_span = end - start;
+    cout << "Finished compression to " << out << "[.dict] took " << time_span.count() << "ms " << endl;
 }
 
 int main(int argc, char *argv[]){

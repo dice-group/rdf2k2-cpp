@@ -18,11 +18,16 @@ public:
     double getH();
     long getLabel();
     void clear();
+
+    std::vector<Point> matrix;
+
+    void addPoint(Point &p);
+
 private:
     long pID;
-    std::vector<Point> matrix;
     double h=-1;
     long pointCount=0;
+
 };
 
 

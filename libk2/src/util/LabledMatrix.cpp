@@ -19,7 +19,9 @@ LabledMatrix::LabledMatrix(long pID, long size) {
 
 LabledMatrix::LabledMatrix() {}
 
-
+void LabledMatrix::addPoint(Point &p){
+    matrix.push_back(p);
+}
 
 void LabledMatrix::set(long sID, long oID) {
     matrix[pointCount++] =Point(sID, oID);

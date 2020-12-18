@@ -8,15 +8,16 @@
 #include <vector>
 #include "../util/LabledMatrix.h"
 #include <Dictionary.hpp>
+#include <FourSectionDictionary.hpp>
 
 class RDFDecompressor {
 public:
     void readK2(char *in, std::vector<LabledMatrix>& matrices);
-    hdt::Dictionary& readDict(char *dictIn);
+    void readDict(char *dictIn, hdt::FourSectionDictionary &dict);
     void writeRDF(char *in, char* out);
 private:
     char *readFile(char *in);
-
+    void writeNTRIPLES(char *out, std::vector<LabledMatrix> &matrices, hdt::FourSectionDictionary &dict);
 };
 
 

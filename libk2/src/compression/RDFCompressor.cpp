@@ -59,7 +59,7 @@ void RDFCompressor::compressRDF(char *in, char *out) {
     printMem();
 
     hdt::ControlInformation ci = hdt::ControlInformation();
-    ci.setType(hdt::ControlInformationType::DICTIONARY);
+    //ci.setType(hdt::ControlInformationType::DICTIONARY);
     char dictOut[strlen(out) + 5];
     strcpy(dictOut, out);
     strcat(dictOut, ".dict");

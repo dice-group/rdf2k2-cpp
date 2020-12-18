@@ -145,7 +145,18 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
 
     //Write evertyhing
     mtx.lock();
-    outfile << matrix.getLabel();
+    long label = matrix.getLabel();
+
+
+ /*   for(char i=(sizeof(long)-1)*8;i>=0;i-=8){
+        u_char ch = (label >> i);
+        u_char w= (ch & 255);
+        outfile << (char) w;
+    }*/
+    for(char i=0;i<=(sizeof(long)-1)*8;i+=8){
+        u_char w= ((label >> i) & 255);
+        outfile << (char) w;
+    }
     outfile << asH;
     for (unsigned int j = 0; j < baos.size(); j++) {
         outfile << baos[j];
