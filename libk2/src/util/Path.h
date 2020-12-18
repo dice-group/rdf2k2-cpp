@@ -20,6 +20,7 @@ public:
     bool hasLast();
     void add(u_int32_t i, u_char newpath);
     void addLast(u_int32_t i);
+    void check();
 
 private:
     std::vector<std::vector<u_char>> paths;

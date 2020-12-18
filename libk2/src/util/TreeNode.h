@@ -25,7 +25,7 @@ public:
 	explicit operator bool() const;
 
 	struct ValueType {
-		char value:4 = 0;
+		char value:5 = 0;
 	} __attribute__((packed));
 
     class TreeNodeBuffer {
@@ -53,6 +53,7 @@ public:
         }
 
         [[maybe_unused]] TreeNode &getTreeNodeChild(TreeNode treeNode, const size_t i) {
+
             return children_buffer[i][treeNode];
         }
 

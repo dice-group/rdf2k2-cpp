@@ -8,7 +8,10 @@
 #include <vector>
 #include <FourSectionDictionary.hpp>
 
+#include <bit>
+#include <bitset>
 #include "../util/Path.h"
+#include <cstring>
 
 //read the whole file in mem, not sure if its faster though.
 char *RDFDecompressor::readFile(char *in) {
@@ -87,20 +90,25 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
         size = file.tellg();
         file.seekg(0, std::ios::beg);
 
-        bool matrixEnd=false;
+        bool matrixEnd;
         char pLabel[sizeof(long)];
         size_t count=0;
+        //file.eof or file.good won't work here
         while (count<size){
             matrixEnd=false;
             file.read((char *) &pLabel, sizeof(pLabel));
             count+=sizeof(pLabel);
-            long label = *((long *)pLabel);
+            long label;
+            //convert pLabel to label.
+            std::memcpy(&label, &pLabel, sizeof pLabel);
+            //long label = *((long *)pLabel);
+
             LabledMatrix matrix{label};
             //read n bytes
             char h[1];
             file.read((char *) h, 1);
             count++;
-            u_int32_t hSize = (u_int32_t) h[0];
+            u_int32_t hSize = 1*h[0];
 
             u_int32_t k = hSize;
             //here begins the while loop
@@ -109,28 +117,32 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
             int x=0;
             do {
                 if (p.hasLast()) {
-
+                    p.check();
                     p.addLast(j);
+                    p.check();
                     j++;
                 }
-                char b[1];
-                for (int i = j; i < k; i += 2) {
+                u_char b[1];
+                for (u_int32_t i = j; i < k; i += 2) {
+
                     file.read((char *) b, sizeof(u_char));
                     count++;
                     p.add(i, b[0]);
+                    p.check();
                 }
-
                 for(Point &point : p.calculatePoints()){
                     matrix.addPoint(point);
                 }
                 j = hSize-1;
                 for (;j>0;j--) {
                     p.pop(j - 1);
+                    p.check();
                     if (!p.isEmpty(j - 1)) {
                         break;
                     }
                 }
                 x++;
+
                 if(j<=0){
                     matrixEnd=true;
                     matrices.push_back(matrix);

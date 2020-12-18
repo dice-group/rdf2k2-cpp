@@ -3,6 +3,7 @@
 //
 
 #include "Path.h"
+#include <iostream>
 #include <cmath>
 
 Path::Path(u_int32_t h) {
@@ -27,18 +28,27 @@ std::vector<Point> Path::calculatePoints(){
     std::vector<Point> ret{};
     while(!isEmpty(h-1)) {
         ret.push_back(calculatePoint());
+        check();
         pop(h - 1);
-
+        check();
     }
     return ret;
 }
 
+void Path::check(){
+    for(u_int32_t i=0;i<h-1;i++){
+        if(paths[i].empty() & !paths[i+1].empty()){
+            std::cerr << "weird" << std::endl;
+        }
+    }
+    }
 
 Point Path::calculatePoint(){
     long row=0, col=0;
     u_char x=0;
-    for(int i=h-1;i>=0;i--){
-        u_char p =paths[i][paths[i].size()-1];
+    for(u_int32_t i=h;i>0;i--){
+        //FIXME files produces SIGSEV because some vecotrs in paths are empty, despite that they shouldn't be.
+        u_char p =paths[i-1][paths[i-1].size()-1];
         if(p==1){col+=pow(2, x);}
         if(p==2){row+=pow(2, x);}
         if(p==3){row+=pow(2, x);col+=pow(2, x);}

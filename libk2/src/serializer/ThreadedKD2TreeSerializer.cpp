@@ -134,8 +134,7 @@ void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeN
 */
     vector<unsigned char> baos = vector<unsigned char>();
 
-    unsigned char asH = h;
-
+    u_char asH = h;
     atomic_uchar last = 0;
     bool shift= true;
     shift = this->merge(root, baos, shift, last, treeNodeBuffer);

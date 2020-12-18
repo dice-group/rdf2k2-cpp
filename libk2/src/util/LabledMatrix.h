@@ -24,6 +24,7 @@ public:
     void addPoint(Point &p);
 
 private:
+    //TODO it so unlikely that pID will get over Int, we can safely use u_int32_t
     long pID;
     double h=-1;
     long pointCount=0;
