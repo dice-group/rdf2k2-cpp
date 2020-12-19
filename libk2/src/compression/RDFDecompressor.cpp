@@ -42,7 +42,7 @@ void RDFDecompressor::writeRDF(char *in, char* out){
     std::cout << "Reading k2 trees took " << time_span.count() << " ms " << endl;
     hdt::FourSectionDictionary dict{};
 
-    char dictIn[strlen(out) + 5];
+    char dictIn[strlen(in) + 5];
     strcpy(dictIn, in);
     strcat(dictIn, ".dict");
     readDict(dictIn, dict);
