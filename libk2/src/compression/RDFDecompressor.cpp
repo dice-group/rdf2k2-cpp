@@ -15,6 +15,7 @@
 #include "../util/StringUtils.h"
 #include "../util/RDFTools.h"
 #include <regex>
+#include <chrono>
 
 //read the whole file in mem, not sure if its faster though.
 char *RDFDecompressor::readFile(char *in) {
@@ -33,15 +34,28 @@ char *RDFDecompressor::readFile(char *in) {
 }
 
 void RDFDecompressor::writeRDF(char *in, char* out){
+    std::chrono::high_resolution_clock::time_point p1 = chrono::high_resolution_clock::now();
     std::vector<LabledMatrix> matrices{};
     readK2(in, matrices);
+    std::chrono::high_resolution_clock::time_point p2 = chrono::high_resolution_clock::now();
+    std::chrono::duration<double, milli> time_span = p2 - p1;
+    std::cout << "Reading k2 trees took " << time_span.count() << " ms " << endl;
     hdt::FourSectionDictionary dict{};
+
     char dictIn[strlen(out) + 5];
     strcpy(dictIn, in);
     strcat(dictIn, ".dict");
     readDict(dictIn, dict);
+    p1 = chrono::high_resolution_clock::now();
+    time_span = p1 - p2;
+    std::cout << "Reading Dict took " << time_span.count() << " ms " << endl;
+
     //TODO for now just use ntriples, but later on we want to use SERD
     writeNTRIPLES(out, matrices, dict);
+    p2 = chrono::high_resolution_clock::now();
+
+    time_span = p2 - p1;
+    std::cout << "Writing triples took " << time_span.count() << " ms " << endl;
 }
 
 void RDFDecompressor::writeNTRIPLES(char *out, std::vector<LabledMatrix> &matrices, hdt::FourSectionDictionary &dict){
