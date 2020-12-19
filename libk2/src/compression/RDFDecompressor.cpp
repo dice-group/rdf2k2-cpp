@@ -64,16 +64,22 @@ void k2::RDFDecompressor::writeNTRIPLES(char *out, std::vector<k2::LabledMatrix>
     std::ofstream output;
     output.open(out, ios::out | ios::trunc );
     size_t count = 0;
-
     for(k2::LabledMatrix &matrix: matrices) {
-
+        std::string writeBuffer{};
         std::string predicate = dict.idToString(matrix.getLabel()+1, hdt::TripleComponentRole::PREDICATE);
         for(const k2::Point &p : matrix.getPoints()) {
             std::string subject = dict.idToString(p.getRow()+1, hdt::TripleComponentRole::SUBJECT);
             std::string object = dict.idToString(p.getCol()+1, hdt::TripleComponentRole::OBJECT);
-            output  << k2::RDFTools::getTerm(subject) << " <" << predicate << "> " << k2::RDFTools::getTerm(object) << " ." << endl;
+            writeBuffer += k2::RDFTools::getTerm(subject)+" <"+predicate+"> "+k2::RDFTools::getTerm(object)+" .\n";
             count++;
+            if(count % 1'000 ==0){
+                output << writeBuffer ;
+                output.flush();
+                writeBuffer="";
+            }
         }
+        output << writeBuffer ;
+        output.flush();
     }
     std::cout << "Wrote " << count << " triples " << std::endl ;
 
