@@ -82,7 +82,6 @@ void ThreadedKD2TreeSerializer::writeTrees(std::vector<long> *use, std::vector<L
 void ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, std::ofstream &outfile){
 	TreeNode root = treeNodeBuffer.constructTreeNode();
     double h = matrix.getH();
-    std::cout << "h: " << h << ", could be h: " << matrix.getMayH() <<std::endl;
     double size = pow(2, h);
     long mSize=matrix.getPoints().size();
     long count=0;
