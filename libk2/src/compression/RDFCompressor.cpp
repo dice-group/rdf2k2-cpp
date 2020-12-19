@@ -26,7 +26,6 @@ void k2::RDFCompressor::compressRDF(char *in, char *out) {
     printMem("Start: ");
     hdt::RDFNotation notation = guessNotation(in);
     auto *parser = hdt::RDFParserCallback::getParserCallback(notation);
-    std::cout << typeid(parser).name() << std::endl;
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 
