@@ -6,7 +6,7 @@
 #include "TreeNode.h"
 
 
-TreeNode TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
+k2::TreeNode k2::TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
 	TreeNode child_node = treeNodeBuffer.getTreeNodeChild(*this, i);
     if(child_node == NO_CHILD_NODE) {
 		treeNodeBuffer.getTreeNodeValue(*this).value +=pow(2, i);
@@ -16,19 +16,19 @@ TreeNode TreeNode::setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer){
     return child_node;
 }
 
-void TreeNode::clear(TreeNodeBuffer& treeNodeBuffer) {
+void k2::TreeNode::clear(TreeNodeBuffer& treeNodeBuffer) {
 	treeNodeBuffer.clearTreeNode(*this);
 }
 
-TreeNode TreeNode::getChild(int i, TreeNodeBuffer& treeNodeBuffer) {
+k2::TreeNode k2::TreeNode::getChild(int i, TreeNodeBuffer& treeNodeBuffer) {
     return treeNodeBuffer.getTreeNodeChild(*this, i);
 }
 
-bool TreeNode::isLeaf(TreeNodeBuffer& treeNodeBuffer) {
+bool k2::TreeNode::isLeaf(TreeNodeBuffer& treeNodeBuffer) {
     return !treeNodeBuffer.getTreeNodeValue(*this).value;
 }
 
-unsigned char TreeNode::getRawValue(bool reverse, TreeNodeBuffer& treeNodeBuffer) const{
+unsigned char k2::TreeNode::getRawValue(bool reverse, TreeNodeBuffer& treeNodeBuffer) const{
 	u_char value =  treeNodeBuffer.getTreeNodeValue(*this).value;
     if (!reverse)
         return value;
@@ -40,12 +40,12 @@ unsigned char TreeNode::getRawValue(bool reverse, TreeNodeBuffer& treeNodeBuffer
     return ret;
 }
 
-TreeNode::TreeNode(uint64_t id) : id(id) {}
+k2::TreeNode::TreeNode(uint64_t id) : id(id) {}
 
-TreeNode::operator size_t() const {
+k2::TreeNode::operator size_t() const {
 	return id;
 }
 
-TreeNode::operator bool() const {
+k2::TreeNode::operator bool() const {
 	return id != NO_CHILD_NODE;
 }

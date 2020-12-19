@@ -17,8 +17,10 @@
 #include <regex>
 #include <chrono>
 
+#include "../io/ByteBuffer.h"
+
 //read the whole file in mem, not sure if its faster though.
-char *RDFDecompressor::readFile(char *in) {
+char *k2::RDFDecompressor::readFile(char *in) {
     char * memblock;
     std::streampos size;
     std::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
@@ -33,9 +35,9 @@ char *RDFDecompressor::readFile(char *in) {
     return memblock;
 }
 
-void RDFDecompressor::writeRDF(char *in, char* out){
+void k2::RDFDecompressor::writeRDF(char *in, char* out){
     std::chrono::high_resolution_clock::time_point p1 = chrono::high_resolution_clock::now();
-    std::vector<LabledMatrix> matrices{};
+    std::vector<k2::LabledMatrix> matrices{};
     readK2(in, matrices);
     std::chrono::high_resolution_clock::time_point p2 = chrono::high_resolution_clock::now();
     std::chrono::duration<double, milli> time_span = p2 - p1;
@@ -58,15 +60,15 @@ void RDFDecompressor::writeRDF(char *in, char* out){
     std::cout << "Writing triples took " << time_span.count() << " ms " << endl;
 }
 
-void RDFDecompressor::writeNTRIPLES(char *out, std::vector<LabledMatrix> &matrices, hdt::FourSectionDictionary &dict){
+void k2::RDFDecompressor::writeNTRIPLES(char *out, std::vector<k2::LabledMatrix> &matrices, hdt::FourSectionDictionary &dict){
     std::ofstream output;
     output.open(out, ios::out | ios::trunc );
     size_t count = 0;
 
-    for(LabledMatrix &matrix: matrices) {
+    for(k2::LabledMatrix &matrix: matrices) {
 
         std::string predicate = dict.idToString(matrix.getLabel()+1, hdt::TripleComponentRole::PREDICATE);
-        for(const Point &p : matrix.getPoints()) {
+        for(const k2::Point &p : matrix.getPoints()) {
             std::string subject = dict.idToString(p.getRow()+1, hdt::TripleComponentRole::SUBJECT);
             std::string object = dict.idToString(p.getCol()+1, hdt::TripleComponentRole::OBJECT);
             output  << k2::RDFTools::getTerm(subject) << " <" << predicate << "> " << k2::RDFTools::getTerm(object) << " ." << endl;
@@ -79,7 +81,7 @@ void RDFDecompressor::writeNTRIPLES(char *out, std::vector<LabledMatrix> &matric
 }
 
 
-void  RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &dict){
+void  k2::RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &dict){
     //std::ifstream file{dictIn, std::ios::in|std::ios::binary|std::ios::ate};
     //std::istream& s   = file;
     hdt::ControlInformation ci =hdt::ControlInformation();
@@ -101,7 +103,7 @@ void  RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &dict){
 }
 
 
-void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
+void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
     std::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
     std::streampos size;
     //TODO instead of getting each single byte, use ByteBuffer to fasten up process.
@@ -109,14 +111,20 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
         //read long, read h
         size = file.tellg();
         file.seekg(0, std::ios::beg);
-
+        size_t s = 1*size;
+        k2::ByteBuffer byteBuffer{&file, s};
         bool matrixEnd;
-        char pLabel[sizeof(long)];
+        u_char pLabel[sizeof(long)];
         size_t count=0;
         //file.eof or file.good won't work here
+        //while (!byteBuffer.eos()){
         while (count<size){
             matrixEnd=false;
-            file.read((char *) &pLabel, sizeof(pLabel));
+
+            size_t pLabelLen= sizeof(pLabel);
+            //file.read((char *) &pLabel, sizeof(pLabel));
+            byteBuffer.next(pLabelLen, (u_char *) &pLabel);
+
             count+=sizeof(pLabel);
             long label;
             //convert pLabel to label.
@@ -126,7 +134,8 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
             LabledMatrix matrix{label};
             //read n bytes
             u_char h[1];
-            file.read((char *) h, 1);
+            byteBuffer.next(1, h);
+            //file.read((char *) h, 1);
             count++;
             u_int32_t hSize = 1*h[0];
 
@@ -145,7 +154,8 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                 u_char b[1];
                 for (u_int32_t i = j; i < k; i += 2) {
 
-                    file.read((char *) b, sizeof(u_char));
+                    //file.read((char *) b, sizeof(u_char));
+                    byteBuffer.next(1, b);
                     count++;
                     p.add(i, b[0]);
                     p.check();

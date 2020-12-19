@@ -10,17 +10,19 @@
 namespace k2 {
     class ByteBuffer {
     public:
-        explicit ByteBuffer(std::istream &istream, size_t len, size_t initalSize = 1024);
+        explicit ByteBuffer(std::istream *istream, size_t len, size_t initalSize = 1024);
 
-        u_char next();
+        void next(size_t length, u_char *putIn);
 
-        u_char *next(size_t len);
-
-        bool eof();
+        bool eos();
 
     private:
-        u_char *buffer;
+        u_char buffer[1024];
         size_t pointer = 0;
+        std::istream *istream;
+        size_t len;
+        size_t bufferSize;
+        void fillBuffer();
     };
 
 }

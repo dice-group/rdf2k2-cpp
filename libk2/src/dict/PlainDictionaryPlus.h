@@ -7,10 +7,11 @@
 
 #include <PlainDictionary.hpp>
 
-class PlainDictionaryPlus : public hdt::PlainDictionary{
-public:
-    hdt::DictionaryEntry * getEntry(const std::string & str, hdt::TripleComponentRole pos);
-};
-
+namespace k2 {
+    class PlainDictionaryPlus : public hdt::PlainDictionary {
+    public:
+        hdt::DictionaryEntry *getEntry(const std::string &str, hdt::TripleComponentRole pos);
+    };
+}
 
 #endif //RDF2K2_CPP_PLAINDICTIONARYPLUS_H

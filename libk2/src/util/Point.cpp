@@ -4,17 +4,17 @@
 
 #include "Point.h"
 
-Point::Point(long sID, long oID) {
+k2::Point::Point(unsigned long sID, unsigned long oID) {
     this->sID=sID;
     this->oID=oID;
 }
 
-Point::Point() {}
+k2::Point::Point() {}
 
-long Point::getCol() const {
+unsigned long k2::Point::getCol() const {
     return oID;
 }
 
-long Point::getRow() const {
+unsigned long k2::Point::getRow() const {
     return sID;
 }

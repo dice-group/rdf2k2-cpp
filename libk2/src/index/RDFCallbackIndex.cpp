@@ -10,7 +10,7 @@
 #include <PlainDictionary.hpp>
 
 
-RDFCallbackIndex::RDFCallbackIndex(hdt::PlainDictionary * dict, ThreadedKD2TreeSerializer *serializer, std::vector<long> *sizeList) {
+k2::RDFCallbackIndex::RDFCallbackIndex(hdt::PlainDictionary * dict, ThreadedKD2TreeSerializer *serializer, std::vector<long> *sizeList) {
     this->dict=dict;
     this->serializer = serializer;
     this->sizeList = sizeList;
@@ -18,9 +18,9 @@ RDFCallbackIndex::RDFCallbackIndex(hdt::PlainDictionary * dict, ThreadedKD2TreeS
 
 }
 
-long RDFCallbackIndex::getCount() {return count;}
+long k2::RDFCallbackIndex::getCount() {return count;}
 
-void RDFCallbackIndex::processTriple(const hdt::TripleString &triple, unsigned long long pos) {
+void k2::RDFCallbackIndex::processTriple(const hdt::TripleString &triple, unsigned long long pos) {
 
     long sID = dict->stringToId(triple.getSubject(), hdt::TripleComponentRole::SUBJECT);
     long pID = dict->stringToId(triple.getPredicate(), hdt::TripleComponentRole::PREDICATE);

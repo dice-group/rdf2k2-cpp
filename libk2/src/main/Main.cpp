@@ -29,7 +29,7 @@ long getFileSize(char *in){
 void compress(char *in, char *out, bool threaded){
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     std::cout << "Starting compression for file " << in << std::endl;
-    RDFCompressor *compressor = new RDFCompressor(threaded);
+    k2::RDFCompressor *compressor = new k2::RDFCompressor(threaded);
     compressor->compressRDF(in, out);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, milli> time_span = end - start;
@@ -45,7 +45,7 @@ void compress(char *in, char *out, bool threaded){
 void decompress(char *in, char *out, bool threaded, string format){
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     cout << "Starting decompression for file " << in << std::endl;
-    RDFDecompressor *decompressor = new RDFDecompressor();
+    k2::RDFDecompressor *decompressor = new k2::RDFDecompressor();
     decompressor->writeRDF(in, out);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, milli> time_span = end - start;

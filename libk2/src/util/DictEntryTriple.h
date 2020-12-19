@@ -8,22 +8,27 @@
 #include <Dictionary.hpp>
 #include <PlainDictionary.hpp>
 
-class DictEntryTriple {
+namespace k2 {
 
-public:
-    DictEntryTriple(hdt::DictionaryEntry *subject, hdt::DictionaryEntry *predicate, hdt::DictionaryEntry *object);
-    hdt::DictionaryEntry * getSubject()const ;
-    hdt::DictionaryEntry * getPredicate()const ;
-    hdt::DictionaryEntry * getObject()const ;
+    class DictEntryTriple {
 
-    void clear();
+    public:
+        DictEntryTriple(hdt::DictionaryEntry *subject, hdt::DictionaryEntry *predicate, hdt::DictionaryEntry *object);
 
-private:
-    hdt::DictionaryEntry *subject;
-    hdt::DictionaryEntry *predicate;
-    hdt::DictionaryEntry *object;
+        hdt::DictionaryEntry *getSubject() const;
 
-};
+        hdt::DictionaryEntry *getPredicate() const;
 
+        hdt::DictionaryEntry *getObject() const;
+
+        void clear();
+
+    private:
+        hdt::DictionaryEntry *subject;
+        hdt::DictionaryEntry *predicate;
+        hdt::DictionaryEntry *object;
+
+    };
+}
 
 #endif //RDF2K2_CPP_DICTENTRYTRIPLE_H

@@ -4,16 +4,16 @@
 
 #include "Triple.h"
 
-Triple::Triple(long s, long p, long o) {
+k2::Triple::Triple(long s, long p, long o) {
     sID=s;
     pID=p;
     oID=o;
 }
 
 
-Triple::Triple() {}
+k2::Triple::Triple() {}
 
-long Triple::get(int i) {
+long k2::Triple::get(int i) {
     if(i==0){
         return sID;
     }

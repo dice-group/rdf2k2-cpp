@@ -15,14 +15,14 @@
 #include "../dict/Loader.h"
 #include "../dict/PlainDictionaryPlus.h"
 
-RDFCompressor::RDFCompressor(bool threaded) {
+k2::RDFCompressor::RDFCompressor(bool threaded) {
     this->threaded = threaded;
     this->dict = new PlainDictionaryPlus();
     this->dictionary = new hdt::FourSectionDictionary();
 }
 
 
-void RDFCompressor::compressRDF(char *in, char *out) {
+void k2::RDFCompressor::compressRDF(char *in, char *out) {
     printMem("Start: ");
     hdt::RDFNotation notation = guessNotation(in);
     auto *parser = hdt::RDFParserCallback::getParserCallback(notation);
@@ -84,7 +84,7 @@ void RDFCompressor::compressRDF(char *in, char *out) {
     printMem("End:");
 }
 
-void RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries) {
+void k2::RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries) {
     long triples = 0;
     k2::Loader callback(dict, tripleEntries);
     dict->startProcessing();
@@ -95,7 +95,7 @@ void RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDF
     //return triples;
 }
 
-hdt::RDFNotation RDFCompressor::guessNotation(const char *in) {
+hdt::RDFNotation k2::RDFCompressor::guessNotation(const char *in) {
     const char *ptr = strrchr(in, '.') + 1;
 
     if (strcmp(ptr, "nt") == 0) {

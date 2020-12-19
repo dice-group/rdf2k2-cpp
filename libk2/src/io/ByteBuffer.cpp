@@ -3,10 +3,32 @@
 //
 
 #include "ByteBuffer.h"
-k2::ByteBuffer::ByteBuffer(std::istream &istream, size_t len, size_t initalSize){}
+#include <cmath>
+k2::ByteBuffer::ByteBuffer(std::istream *stream, size_t length, size_t initalSize){
+    this->pointer=0;
+    this->bufferSize = initalSize;
+    this->buffer[bufferSize];
+    this->len=length;
+    this->istream=stream;
+    fillBuffer();
+}
 
-u_char k2::ByteBuffer::next(){return 0;}
+void k2::ByteBuffer::fillBuffer() {
+    buffer[bufferSize];
+    istream->read((char *)buffer, bufferSize);
+}
 
-u_char *k2::ByteBuffer::next(size_t len){return 0;}
 
-bool k2::ByteBuffer::eof(){return false;}
+void k2::ByteBuffer::next(size_t length, u_char *putIn){
+    for(size_t i=0; i<length;i++){
+        if(this->pointer>=this->bufferSize){
+            fillBuffer();
+            this->pointer=0;
+        }
+        putIn[i]= buffer[this->pointer++];
+    }
+}
+
+bool k2::ByteBuffer::eos(){
+    return len<=pointer;
+}

@@ -11,15 +11,15 @@
 #include <iostream>
 #include <sys/sysinfo.h>
 
+    int parseLine(char *line);
 
-int parseLine(char* line);
-
-int getValue();
+    int getValue();
 
 
-long getTotalMemory();
+    long getTotalMemory();
 
-long getVirtMemoryUsed();
-void printMem(const std::string &prefix="");
+    long getVirtMemoryUsed();
+
+    void printMem(const std::string &prefix = "");
 
 #endif //RDF2K2_CPP_STATS_H

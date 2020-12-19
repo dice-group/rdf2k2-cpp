@@ -4,7 +4,7 @@
 
 #include "PlainDictionaryPlus.h"
 
-hdt::DictionaryEntry * PlainDictionaryPlus::getEntry(const std::string & str, hdt::TripleComponentRole pos){
+hdt::DictionaryEntry * k2::PlainDictionaryPlus::getEntry(const std::string & str, hdt::TripleComponentRole pos){
     if(str=="") return nullptr;
 
     if(pos==hdt::PREDICATE) {

@@ -6,25 +6,25 @@
 #include <iostream>
 #include <cmath>
 
-Path::Path(u_int32_t h) {
+k2::Path::Path(u_int32_t h) {
     this->h=h;
     paths.resize(h);
 }
 
-std::vector<std::vector<u_char>> &Path::getPaths(){
+std::vector<std::vector<u_char>> &k2::Path::getPaths(){
     return paths;
 }
 
-bool Path::isEmpty(u_int32_t i){
+bool k2::Path::isEmpty(u_int32_t i){
     return paths[i].empty();
 }
 
-void Path::pop(u_int32_t i){
+void k2::Path::pop(u_int32_t i){
     paths[i].pop_back();
 
 }
 
-std::vector<Point> Path::calculatePoints(){
+std::vector<k2::Point> k2::Path::calculatePoints(){
     std::vector<Point> ret{};
     while(!isEmpty(h-1)) {
         ret.push_back(calculatePoint());
@@ -35,7 +35,7 @@ std::vector<Point> Path::calculatePoints(){
     return ret;
 }
 
-void Path::check(){
+void k2::Path::check(){
     for(u_int32_t i=0;i<h-1;i++){
         if(paths[i].empty() & !paths[i+1].empty()){
             std::cerr << "weird" << std::endl;
@@ -43,7 +43,7 @@ void Path::check(){
     }
     }
 
-Point Path::calculatePoint(){
+k2::Point k2::Path::calculatePoint(){
     long row=0, col=0;
     u_char x=0;
     for(u_int32_t i=h;i>0;i--){
@@ -57,11 +57,11 @@ Point Path::calculatePoint(){
     return Point(row, col);
 }
 
-bool Path::hasLast(){
+bool k2::Path::hasLast(){
     return last!='\00';
 }
 
-void Path::add(u_int32_t i, u_char newpath){
+void k2::Path::add(u_int32_t i, u_char newpath){
     //dissasmble newpath
     if(i>0 && paths[i-1].empty()){
         i;
@@ -90,7 +90,7 @@ void Path::add(u_int32_t i, u_char newpath){
 
 }
 
-void Path::addLast(u_int32_t i){
+void k2::Path::addLast(u_int32_t i){
     u_char x=3;
     for (u_char j = 8; j >= 1; j /= 2) {
         if(last & j){
