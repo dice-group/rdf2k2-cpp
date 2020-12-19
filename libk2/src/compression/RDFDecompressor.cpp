@@ -104,7 +104,7 @@ void  RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &dict){
 void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
     std::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
     std::streampos size;
-
+    //TODO instead of getting each single byte, use ByteBuffer to fasten up process.
     if (file.is_open()) {
         //read long, read h
         size = file.tellg();

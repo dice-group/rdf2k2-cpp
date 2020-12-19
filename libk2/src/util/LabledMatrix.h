@@ -20,7 +20,7 @@ public:
     void clear();
 
     std::vector<Point> matrix;
-
+    double getMayH();
     void addPoint(Point &p);
 
 private:
@@ -28,7 +28,7 @@ private:
     long pID;
     double h=-1;
     long pointCount=0;
-
+    size_t min=  (1UL << 48) - 1;;
 };
 
 

@@ -15,7 +15,6 @@
 #include "../dict/Loader.h"
 #include "../dict/PlainDictionaryPlus.h"
 
-
 RDFCompressor::RDFCompressor(bool threaded) {
     this->threaded = threaded;
     this->dict = new PlainDictionaryPlus();
@@ -26,8 +25,8 @@ RDFCompressor::RDFCompressor(bool threaded) {
 void RDFCompressor::compressRDF(char *in, char *out) {
     printMem("Start: ");
     hdt::RDFNotation notation = guessNotation(in);
-    hdt::RDFParserCallback *parser = hdt::RDFParserCallback::getParserCallback(notation);
-
+    auto *parser = hdt::RDFParserCallback::getParserCallback(notation);
+    std::cout << typeid(parser).name() << std::endl;
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 

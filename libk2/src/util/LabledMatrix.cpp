@@ -30,6 +30,12 @@ void LabledMatrix::set(long sID, long oID) {
     if(oID>h){
         h =oID;
     }
+    if(sID<min){
+        min =sID;
+    }
+    if(oID<min){
+        min =oID;
+    }
 }
 
 long LabledMatrix::getLabel() {
@@ -42,6 +48,10 @@ const  std::vector<Point> &LabledMatrix::getPoints(){
 
 double LabledMatrix::getH(){
     return ceil(log2(h+1));
+}
+
+double LabledMatrix::getMayH(){
+    return ceil(log2((h-min)+1));
 }
 
 void LabledMatrix::clear() {
