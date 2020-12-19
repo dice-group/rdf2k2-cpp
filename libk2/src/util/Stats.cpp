@@ -5,8 +5,6 @@
 #include <iostream>
 #include <sys/sysinfo.h>
 #include "Stats.h"
-using namespace std;
-
 
 int parseLine(char* line){
     // This assumes that a digit will be found and the line ends in " Kb".
@@ -56,5 +54,5 @@ void printMem(const std::string& prefix){
     long totalVirtMemory = getTotalMemory();
     int procMem = getValue();
     long availableVirtMemory = (totalVirtMemory-currentUsedVirtMemory)/1024 + procMem;
-    cout << prefix << "Memory Usage: " << procMem << " kb / " << availableVirtMemory << " kb [" << (totalVirtMemory/1024) << " kb total]" << endl;
+    std::cout << prefix << "Memory Usage: " << procMem << " kb / " << availableVirtMemory << " kb [" << (totalVirtMemory/1024) << " kb total]" << std::endl;
 }

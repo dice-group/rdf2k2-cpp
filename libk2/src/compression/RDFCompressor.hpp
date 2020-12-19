@@ -17,7 +17,7 @@ class RDFCompressor {
         bool threaded;
         PlainDictionaryPlus *dict;
         hdt::Dictionary *dictionary;
-        void readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser,shared_ptr<vector<DictEntryTriple *>> &tripleEntries);
+        void readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser, std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries);
 
         hdt::RDFNotation guessNotation(const char *in);
 };

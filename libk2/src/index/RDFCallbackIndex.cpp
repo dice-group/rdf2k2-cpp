@@ -9,10 +9,8 @@
 #include <iostream>
 #include <PlainDictionary.hpp>
 
-using namespace hdt;
 
-
-RDFCallbackIndex::RDFCallbackIndex(PlainDictionary * dict, ThreadedKD2TreeSerializer *serializer, vector<long> *sizeList) {
+RDFCallbackIndex::RDFCallbackIndex(hdt::PlainDictionary * dict, ThreadedKD2TreeSerializer *serializer, std::vector<long> *sizeList) {
     this->dict=dict;
     this->serializer = serializer;
     this->sizeList = sizeList;
@@ -22,17 +20,17 @@ RDFCallbackIndex::RDFCallbackIndex(PlainDictionary * dict, ThreadedKD2TreeSerial
 
 long RDFCallbackIndex::getCount() {return count;}
 
-void RDFCallbackIndex::processTriple(const TripleString &triple, unsigned long long pos) {
+void RDFCallbackIndex::processTriple(const hdt::TripleString &triple, unsigned long long pos) {
 
-    long sID = dict->stringToId(triple.getSubject(), TripleComponentRole::SUBJECT);
-    long pID = dict->stringToId(triple.getPredicate(), TripleComponentRole::PREDICATE);
-    long oID = dict->stringToId(triple.getObject(), TripleComponentRole::OBJECT);
+    long sID = dict->stringToId(triple.getSubject(), hdt::TripleComponentRole::SUBJECT);
+    long pID = dict->stringToId(triple.getPredicate(), hdt::TripleComponentRole::PREDICATE);
+    long oID = dict->stringToId(triple.getObject(), hdt::TripleComponentRole::OBJECT);
     serializer->add(sID-1, pID-1, oID-1);
     long add = (*sizeList)[pID-1];
     (*sizeList)[pID-1] = add+1;
 
     count++;
     if(count%100000==0){
-        cout << "\rIndexed " << count << " triples.";
+        std::cout << "\rIndexed " << count << " triples.";
     }
 }

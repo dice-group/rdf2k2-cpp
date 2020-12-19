@@ -6,7 +6,6 @@
 #include <vector>
 #include "Point.h"
 #include <math.h>
-using namespace std;
 
 LabledMatrix::LabledMatrix(long pID) {
     this->pID=pID;
@@ -14,7 +13,7 @@ LabledMatrix::LabledMatrix(long pID) {
 
 LabledMatrix::LabledMatrix(long pID, long size) {
     this->pID=pID;
-    this->matrix = vector<Point>(size);
+    this->matrix = std::vector<Point>(size);
 }
 
 LabledMatrix::LabledMatrix() {}
@@ -37,7 +36,7 @@ long LabledMatrix::getLabel() {
     return pID;
 }
 
-const  vector<Point> &LabledMatrix::getPoints(){
+const  std::vector<Point> &LabledMatrix::getPoints(){
     return this->matrix;
 }
 

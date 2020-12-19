@@ -15,7 +15,6 @@
 #include "../dict/Loader.h"
 #include "../dict/PlainDictionaryPlus.h"
 
-using namespace std;
 
 RDFCompressor::RDFCompressor(bool threaded) {
     this->threaded = threaded;
@@ -29,33 +28,33 @@ void RDFCompressor::compressRDF(char *in, char *out) {
     hdt::RDFNotation notation = guessNotation(in);
     hdt::RDFParserCallback *parser = hdt::RDFParserCallback::getParserCallback(notation);
 
-    chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 
-    shared_ptr<vector<DictEntryTriple *>> triples = make_shared<vector<DictEntryTriple *>>();
+    std::shared_ptr<vector<DictEntryTriple *>> triples = std::make_shared<vector<DictEntryTriple *>>();
     readFile(in, notation, parser, triples);
     size_t noOfTriples = triples->size();
 
-    chrono::high_resolution_clock::time_point end = chrono::high_resolution_clock::now();
-    chrono::duration<double, milli> time_span = end - start;
-    cout << "Reading took " << time_span.count() << "ms" << endl;
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, milli> time_span = end - start;
+    std::cout << "Reading took " << time_span.count() << "ms" << std::endl;
     printMem();
 
 
-    start = chrono::high_resolution_clock::now();
+    start = std::chrono::high_resolution_clock::now();
     IntBasedIndexer index = IntBasedIndexer(dict, dictionary);
 
     ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded, dict->getNpredicates(), noOfTriples);
-    vector<long> *sizeList = index.indexTriples(triples, in, serializer, notation, parser);
+    std::vector<long> *sizeList = index.indexTriples(triples, in, serializer, notation, parser);
     for(size_t x=0 ; x< triples->size(); x++){
         (*triples)[x]->clear();
         delete (*triples)[x];
     }
     triples->clear();
     triples.reset();
-    end = chrono::high_resolution_clock::now();
+    end = std::chrono::high_resolution_clock::now();
     time_span = end - start;
-    cout << "Indexing took " << time_span.count() << "ms" << endl;
+    std::cout << "Indexing took " << time_span.count() << "ms" << std::endl;
     printMem();
 
     hdt::ControlInformation ci = hdt::ControlInformation();
@@ -63,7 +62,7 @@ void RDFCompressor::compressRDF(char *in, char *out) {
     char dictOut[strlen(out) + 5];
     strcpy(dictOut, out);
     strcat(dictOut, ".dict");
-    ofstream outfile;
+    std::ofstream outfile;
     outfile.open(dictOut, ios::out | ios::trunc);
     printMem("Before Dict save: ");
     dictionary->save(outfile, ci);
@@ -74,25 +73,25 @@ void RDFCompressor::compressRDF(char *in, char *out) {
     serializer->initSpace(sizeList);
     sizeList->clear();
     delete sizeList;
-    start = chrono::high_resolution_clock::now();
+    start = std::chrono::high_resolution_clock::now();
 
     serializer->flush();
     printMem("Serializer Flush: ");
     serializer->serializeMtx(out);
-    end = chrono::high_resolution_clock::now();
+    end = std::chrono::high_resolution_clock::now();
     delete serializer;
     time_span = end - start;
-    cout << "serialization took " << time_span.count() << "ms" << endl;
+    std::cout << "serialization took " << time_span.count() << "ms" << std::endl;
     printMem("End:");
 }
 
-void RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, shared_ptr<vector<DictEntryTriple *>> &tripleEntries) {
+void RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries) {
     long triples = 0;
-    Loader callback(dict, tripleEntries);
+    k2::Loader callback(dict, tripleEntries);
     dict->startProcessing();
     parser->doParse(in, "<http://base.com>", notation, true, &callback);
     triples = callback.getCount();
-    cout << "\rLoaded " << triples << " triples in total." << endl;
+    std::cout << "\rLoaded " << triples << " triples in total." << std::endl;
     dict->stopProcessing();
     //return triples;
 }

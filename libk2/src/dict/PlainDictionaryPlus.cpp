@@ -3,18 +3,17 @@
 //
 
 #include "PlainDictionaryPlus.h"
-using namespace hdt;
 
 hdt::DictionaryEntry * PlainDictionaryPlus::getEntry(const std::string & str, hdt::TripleComponentRole pos){
     if(str=="") return nullptr;
 
-    if(pos==PREDICATE) {
-        DictEntryIt it = hashPredicate.find(str.c_str());
+    if(pos==hdt::PREDICATE) {
+        hdt::DictEntryIt it = hashPredicate.find(str.c_str());
         if(it!=hashPredicate.end()) {
             //cout << "  existing predicate: " << str << endl;
             return it->second;
         } else {
-            DictionaryEntry *entry = new DictionaryEntry;
+            hdt::DictionaryEntry *entry = new hdt::DictionaryEntry;
             entry->str = new char [str.length()+1];
             strcpy(entry->str, str.c_str());
             entry->id = predicates.size()+1;
@@ -27,17 +26,17 @@ hdt::DictionaryEntry * PlainDictionaryPlus::getEntry(const std::string & str, hd
         }
     }
 
-    DictEntryIt subjectIt = hashSubject.find(str.c_str());
-    DictEntryIt objectIt = hashObject.find(str.c_str());
+    hdt::DictEntryIt subjectIt = hashSubject.find(str.c_str());
+    hdt::DictEntryIt objectIt = hashObject.find(str.c_str());
 
     bool foundSubject = subjectIt!=hashSubject.end();
     bool foundObject = objectIt!=hashObject.end();
     //cout << "A: " << foundSubject << " B: " << foundSubject << endl;
 
-    if(pos==SUBJECT) {
+    if(pos==hdt::SUBJECT) {
         if( !foundSubject && !foundObject) {
             // Did not exist, create new.
-            DictionaryEntry *entry = new DictionaryEntry;
+            hdt::DictionaryEntry *entry = new hdt::DictionaryEntry;
             entry->str = new char [str.length()+1];
             strcpy(entry->str, str.c_str());
             sizeStrings += str.length();
@@ -52,14 +51,14 @@ hdt::DictionaryEntry * PlainDictionaryPlus::getEntry(const std::string & str, hd
         } else if(foundObject) {
             // Already exists in objects.
             //cout << "   existing subject as object: " << str << endl;
-            DictionaryEntry *entry = objectIt->second;
+            hdt::DictionaryEntry *entry = objectIt->second;
             hashSubject[objectIt->second->str] = entry;
             return entry;
         }
-    } else if(pos==OBJECT) {
+    } else if(pos==hdt::OBJECT) {
         if(!foundSubject && !foundObject) {
             // Did not exist, create new.
-            DictionaryEntry *entry = new DictionaryEntry;
+            hdt::DictionaryEntry *entry = new hdt::DictionaryEntry;
             entry->str = new char [str.length()+1];
             strcpy(entry->str, str.c_str());
             sizeStrings += str.length();
@@ -74,7 +73,7 @@ hdt::DictionaryEntry * PlainDictionaryPlus::getEntry(const std::string & str, hd
         } else if(foundSubject) {
             // Already exists in subjects.
             //cout << "     existing object as subject: " << str << endl;
-            DictionaryEntry * entry = subjectIt->second;
+            hdt::DictionaryEntry * entry = subjectIt->second;
             hashObject[subjectIt->second->str] = entry ;
             return entry;
         }

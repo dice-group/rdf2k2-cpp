@@ -24,12 +24,12 @@ private:
         std::vector<Triple> triples;
         std::vector<LabledMatrix> matrices;
         std::vector<std::vector<long>> threadedMatrices;
-        void createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, ofstream &outfile);
+        void createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, std::ofstream &outfile);
         char getNode(const Point &p, long c1, long r1, long c2, long r2);
-        bool merge(TreeNode root, vector<unsigned char> &baos, bool shift, atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer);
+        bool merge(TreeNode root, std::vector<unsigned char> &baos, bool shift, std::atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer);
         long tripleCount=0;
-        mutex mtx;
-    void writeTrees(vector<long> *use, vector<LabledMatrix> *matrices, ofstream &outfile, promise<void> pt);
+        std::mutex mtx;
+        void writeTrees(std::vector<long> *use, std::vector<LabledMatrix> *matrices, std::ofstream &outfile, std::promise<void> pt);
 };
 
 #endif //RDF2K2_CPP_ThreadedKD2TreeSerializer_H

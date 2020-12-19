@@ -11,8 +11,6 @@
 #include <iostream>
 #include <sys/sysinfo.h>
 
-using namespace std;
-
 
 int parseLine(char* line);
 

@@ -9,13 +9,12 @@
 #include "../serializer/ThreadedKD2TreeSerializer.hpp"
 #include "../util/DictEntryTriple.h"
 #include <RDFParser.hpp>
-using namespace std;
 
 class IntBasedIndexer {
     public:
     IntBasedIndexer(hdt::PlainDictionary *pDictionary, hdt::Dictionary * pDict);
     void load();
-    vector<long> *indexTriples(shared_ptr<vector<DictEntryTriple *>> &triples, char* rdfFile, ThreadedKD2TreeSerializer  *serializer, hdt::RDFNotation, hdt::RDFParserCallback *parser);
+    vector<long> *indexTriples(std::shared_ptr<std::vector<DictEntryTriple *>> &triples, char* rdfFile, ThreadedKD2TreeSerializer  *serializer, hdt::RDFNotation, hdt::RDFParserCallback *parser);
 
     private:
 //        long noOfPredicates;

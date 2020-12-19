@@ -10,8 +10,6 @@
 #include <cstdio>
 #include <cstdint>
 
-using namespace std;
-
 
 class TreeNode {
 public:

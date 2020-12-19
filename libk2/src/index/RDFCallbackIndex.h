@@ -15,12 +15,12 @@ class RDFCallbackIndex : public hdt::RDFCallback {
 public:
 
     void processTriple(const hdt::TripleString &triple, unsigned long long pos) override;
-    RDFCallbackIndex(hdt::PlainDictionary *dict, ThreadedKD2TreeSerializer *serializer, vector<long> *sizeList);
+    RDFCallbackIndex(hdt::PlainDictionary *dict, ThreadedKD2TreeSerializer *serializer, std::vector<long> *sizeList);
     long getCount();
 private:
     hdt::PlainDictionary * dict;
     ThreadedKD2TreeSerializer *serializer;
-    vector<long> *sizeList;
+    std::vector<long> *sizeList;
     long count;
 };
 
