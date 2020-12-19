@@ -125,7 +125,7 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
 
             LabledMatrix matrix{label};
             //read n bytes
-            char h[1];
+            u_char h[1];
             file.read((char *) h, 1);
             count++;
             u_int32_t hSize = 1*h[0];
@@ -168,7 +168,11 @@ void RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                     matrices.push_back(matrix);
                 }
             } while (!matrixEnd);
+            if(matrices.size()%100==0){
+                std::cout << "\r converted " << matrices.size() << " matrices";
+            }
         } ;
+        std::cout << std::endl;
         file.close();
     }
 }
