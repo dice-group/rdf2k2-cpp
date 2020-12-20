@@ -17,7 +17,7 @@
 k2::ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, size_t noOfPredicates, size_t noOfTriples) {
     triples = std::vector<Triple>(noOfTriples);
     matrices = std::vector<LabledMatrix>(noOfPredicates);
-    int threads=1;
+    u_int threads=1;
     if(threaded) {
         threads = std::thread::hardware_concurrency();
     }

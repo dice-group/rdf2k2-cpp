@@ -1,6 +1,7 @@
 //
 // Created by minimal on 12/20/20.
 //
+#ifdef BOOST_LIBRARY
 
 #include <boost/filesystem/fstream.hpp>
 #include <string>
@@ -17,3 +18,4 @@ void k2::RDFSimpleParser::doParse(const char *fileName, const char *baseUri, hdt
     }
     is.close();
 }
+#endif

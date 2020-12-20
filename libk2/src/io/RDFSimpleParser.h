@@ -1,6 +1,7 @@
 //
 // Created by minimal on 12/20/20.
 //
+#ifdef BOOST_LIBRARY
 
 #ifndef RDF2K2_CPP_RDFSIMPLEPARSER_H
 #define RDF2K2_CPP_RDFSIMPLEPARSER_H
@@ -15,3 +16,4 @@ namespace k2 {
 }
 
 #endif //RDF2K2_CPP_RDFSIMPLEPARSER_H
+#endif
