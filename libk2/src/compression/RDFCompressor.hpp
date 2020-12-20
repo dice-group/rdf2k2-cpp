@@ -23,7 +23,7 @@ namespace k2 {
         void readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser,
                       std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries);
 
-        hdt::RDFNotation guessNotation(const char *in);
+        hdt::RDFNotation guessNotation(const char *in) const;
     };
 }
 #endif //RDF2K2_CPP_RDFCOMPRESSOR_H

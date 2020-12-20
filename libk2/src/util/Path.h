@@ -13,9 +13,7 @@ namespace k2 {
     public:
         Path(u_int32_t h);
 
-        std::vector<std::vector<u_char>> &getPaths();
-
-        bool isEmpty(u_int32_t i);
+        bool isEmpty(u_int32_t i) const;
 
         void pop(u_int32_t i);
 
@@ -23,13 +21,11 @@ namespace k2 {
 
         Point calculatePoint();
 
-        bool hasLast();
+        bool hasLast() const;
 
         void add(u_int32_t i, u_char newpath);
 
         void addLast(u_int32_t i);
-
-        void check();
 
     private:
         std::vector<std::vector<u_char>> paths;

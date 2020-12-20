@@ -11,11 +11,8 @@ k2::Path::Path(u_int32_t h) {
     paths.resize(h);
 }
 
-std::vector<std::vector<u_char>> &k2::Path::getPaths(){
-    return paths;
-}
 
-bool k2::Path::isEmpty(u_int32_t i){
+bool k2::Path::isEmpty(u_int32_t i) const{
     return paths[i].empty();
 }
 
@@ -28,20 +25,11 @@ std::vector<k2::Point> k2::Path::calculatePoints(){
     std::vector<Point> ret{};
     while(!isEmpty(h-1)) {
         ret.push_back(calculatePoint());
-        check();
         pop(h - 1);
-        check();
     }
     return ret;
 }
 
-void k2::Path::check(){
-    for(u_int32_t i=0;i<h-1;i++){
-        if(paths[i].empty() & !paths[i+1].empty()){
-            std::cerr << "weird" << std::endl;
-        }
-    }
-    }
 
 k2::Point k2::Path::calculatePoint(){
     long row=0, col=0;
@@ -57,7 +45,7 @@ k2::Point k2::Path::calculatePoint(){
     return Point(row, col);
 }
 
-bool k2::Path::hasLast(){
+bool k2::Path::hasLast() const{
     return last!='\00';
 }
 

@@ -14,8 +14,14 @@ k2::ByteBuffer::ByteBuffer(std::istream *stream, size_t length, size_t initalSiz
 }
 
 void k2::ByteBuffer::fillBuffer() {
-    buffer[bufferSize];
-    istream->read((char *)buffer, bufferSize);
+    size_t remaining = len-count;
+    if(bufferSize>remaining){
+        buffer[remaining];
+        istream->read((char *)buffer, remaining);
+    }else{
+        buffer[bufferSize];
+        istream->read((char *)buffer, bufferSize);
+    }
 }
 
 
@@ -26,9 +32,10 @@ void k2::ByteBuffer::next(size_t length, u_char *putIn){
             this->pointer=0;
         }
         putIn[i]= buffer[this->pointer++];
+        count++;
     }
 }
 
 bool k2::ByteBuffer::eos(){
-    return len<=pointer;
+    return len<=count;
 }

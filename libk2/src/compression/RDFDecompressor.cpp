@@ -20,21 +20,7 @@
 
 #include "../io/ByteBuffer.h"
 
-//read the whole file in mem, not sure if its faster though.
-char *k2::RDFDecompressor::readFile(char *in) {
-    char * memblock;
-    std::streampos size;
-    std::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
-    if (file.is_open())
-    {
-        size = file.tellg();
-        memblock = new char [size];
-        file.seekg (0, std::ios::beg);
-        file.read (memblock, size);
-        file.close();
-    }
-    return memblock;
-}
+
 
 void k2::RDFDecompressor::writeRDF(char *in, char* out){
     std::chrono::high_resolution_clock::time_point p1 = chrono::high_resolution_clock::now();
@@ -124,8 +110,8 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
         u_char pLabel[sizeof(u_int32_t)];
         size_t count=0;
         //file.eof or file.good won't work here
-        //while (!byteBuffer.eos()){
-        while (count<size){
+        while (!byteBuffer.eos()){
+        //while (count<size){
             matrixEnd=false;
 
             size_t pLabelLen= sizeof(pLabel);
@@ -157,9 +143,7 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
             int x=0;
             do {
                 if (p.hasLast()) {
-                    p.check();
                     p.addLast(j);
-                    p.check();
                     j++;
                 }
                 u_char b[1];
@@ -169,7 +153,6 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                     byteBuffer.next(1, b);
                     count++;
                     p.add(i, b[0]);
-                    p.check();
                 }
                 for(Point &point : p.calculatePoints()){
                     matrix.addPoint(point);
@@ -177,7 +160,6 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                 j = hSize-1;
                 for (;j>0;j--) {
                     p.pop(j - 1);
-                    p.check();
                     if (!p.isEmpty(j - 1)) {
                         break;
                     }

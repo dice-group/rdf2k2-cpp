@@ -22,6 +22,8 @@ namespace k2 {
         std::istream *istream;
         size_t len;
         size_t bufferSize;
+        size_t count=0;
+
         void fillBuffer();
     };
 

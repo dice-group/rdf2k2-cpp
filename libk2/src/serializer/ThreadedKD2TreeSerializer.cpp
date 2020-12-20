@@ -79,7 +79,7 @@ void k2::ThreadedKD2TreeSerializer::writeTrees(std::vector<size_t> *use, std::ve
 
 
 
-void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, std::ofstream &outfile){
+void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, std::ofstream &outfile) {
 	TreeNode root = treeNodeBuffer.constructTreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
@@ -124,14 +124,7 @@ void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::T
 
     }
     matrix.clear();
-/*
-    vector<vector<unsigned char>> hMap = vector<vector<unsigned char>>();
-    for(int i=0;i<h;i++){
-        hMap.push_back(vector<unsigned char>());
-    }
-    TreeNode * root = &treeNodeBuffer.getTreeNode(0);
-    merge(root, hMap, 0, h, treeNodeBuffer);
-*/
+
     std::vector<u_char> baos = std::vector<u_char>();
 
     u_char asH = h;
@@ -145,11 +138,6 @@ void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::T
     mtx.lock();
     u_int32_t label = matrix.getLabel();
 
- /*   for(char i=(sizeof(long)-1)*8;i>=0;i-=8){
-        u_char ch = (label >> i);
-        u_char w= (ch & 255);
-        outfile << (char) w;
-    }*/
     for(char i=0;i<=(sizeof(label)-1)*8;i+=8){
         u_char w= ((label >> i) & 255);
         outfile << (char) w;
@@ -190,16 +178,7 @@ bool k2::ThreadedKD2TreeSerializer::merge(TreeNode root, std::vector<u_char> &ba
 }
 
 
-
-std::vector<unsigned char> intToBytes(int paramInt)
-{
-    std::vector<unsigned char> arrayOfByte(4);
-    for (int i = 0; i < 4; i++)
-        arrayOfByte[3 - i] = (paramInt >> (i * 8));
-    return arrayOfByte;
-}
-
-char k2::ThreadedKD2TreeSerializer::getNode(const Point &p, size_t c1, size_t r1, size_t c2, size_t r2){
+char k2::ThreadedKD2TreeSerializer::getNode(const Point &p, size_t c1, size_t r1, size_t c2, size_t r2) const{
     size_t rCenter = (r2 - r1) / 2 + r1;
     size_t cCenter = (c2 - c1) / 2 + c1;
     if(p.getCol()<cCenter && p.getRow() <rCenter){

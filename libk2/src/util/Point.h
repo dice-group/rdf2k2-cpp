@@ -5,11 +5,13 @@
 #ifndef RDF2K2_CPP_POINT_H
 #define RDF2K2_CPP_POINT_H
 
+#include <cstddef>
+
 namespace k2 {
 
     class Point {
     public:
-        Point(unsigned long sID, unsigned long oID);
+        Point(size_t sID, size_t oID);
 
         Point();
 

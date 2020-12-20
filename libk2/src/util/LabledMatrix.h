@@ -15,15 +15,15 @@ namespace k2 {
 
         LabledMatrix(u_int32_t pID);
 
-        LabledMatrix(u_int32_t pID, long size);
+        LabledMatrix(u_int32_t pID, size_t size);
 
-        void set(unsigned long sID, unsigned long oID);
+        void set(size_t sID, size_t oID);
 
-        const std::vector<Point> &getPoints();
+        const std::vector<Point> &getPoints() const;
 
-        double getH();
+        double getH() const ;
 
-        u_int32_t getLabel();
+        u_int32_t getLabel() const;
 
         void clear();
 
@@ -36,7 +36,6 @@ namespace k2 {
         u_int32_t pID;
         double h = -1;
         size_t pointCount = 0;
-        u_long min = 4'294'967'295;
     };
 }
 

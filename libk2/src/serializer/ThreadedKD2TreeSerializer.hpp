@@ -32,7 +32,7 @@ namespace k2 {
 
         void createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, std::ofstream &outfile);
 
-        char getNode(const Point &p, size_t c1, size_t r1, size_t c2, size_t r2);
+        char getNode(const Point &p, size_t c1, size_t r1, size_t c2, size_t r2) const;
 
         bool merge(TreeNode root, std::vector<u_char> &baos, bool shift, std::atomic_uchar &last,
                    TreeNode::TreeNodeBuffer &treeNodeBuffer);

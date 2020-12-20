@@ -20,8 +20,6 @@ namespace k2 {
         void writeRDF(char *in, char *out);
 
     private:
-        char *readFile(char *in);
-
         void writeNTRIPLES(char *out, std::vector<LabledMatrix> &matrices, hdt::FourSectionDictionary &dict);
     };
 }

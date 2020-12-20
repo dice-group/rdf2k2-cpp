@@ -4,7 +4,7 @@
 
 #include "Point.h"
 
-k2::Point::Point(unsigned long sID, unsigned long oID) {
+k2::Point::Point(size_t sID, size_t oID) {
     this->sID=sID;
     this->oID=oID;
 }

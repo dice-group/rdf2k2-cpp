@@ -94,7 +94,7 @@ void k2::RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt:
     //return triples;
 }
 
-hdt::RDFNotation k2::RDFCompressor::guessNotation(const char *in) {
+hdt::RDFNotation k2::RDFCompressor::guessNotation(const char *in) const{
     const char *ptr = strrchr(in, '.') + 1;
 
     if (strcmp(ptr, "nt") == 0) {
