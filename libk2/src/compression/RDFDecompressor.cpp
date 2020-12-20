@@ -17,7 +17,7 @@
 #include <regex>
 #include <chrono>
 #include <cmath>
-
+#include <boost/filesystem/fstream.hpp>
 #include "../io/ByteBuffer.h"
 
 
@@ -48,7 +48,7 @@ void k2::RDFDecompressor::writeRDF(char *in, char* out){
 }
 
 void k2::RDFDecompressor::writeNTRIPLES(char *out, std::vector<k2::LabledMatrix> &matrices, hdt::FourSectionDictionary &dict){
-    std::ofstream output;
+    boost::filesystem::ofstream output;
     output.open(out, ios::out | ios::trunc );
     size_t count = 0;
     for(k2::LabledMatrix &matrix: matrices) {
@@ -82,7 +82,7 @@ void  k2::RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &di
 
     u_char * memblock;
     std::streampos size;
-    std::ifstream file (dictIn, std::ios::in|std::ios::binary|std::ios::ate);
+    boost::filesystem::ifstream file (dictIn, std::ios::in|std::ios::binary|std::ios::ate);
     if (file.is_open())
     {
         size = file.tellg();
@@ -97,7 +97,7 @@ void  k2::RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &di
 
 
 void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
-    std::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
+    boost::filesystem::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
     std::streampos size;
 
     if (file.is_open()) {
