@@ -18,7 +18,7 @@ namespace k2 {
 
         void load();
 
-        vector<long> *indexTriples(std::shared_ptr<std::vector<k2::DictEntryTriple *>> &triples, char *rdfFile,
+        vector<size_t> *indexTriples(std::shared_ptr<std::vector<k2::DictEntryTriple *>> &triples,
                                    ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation,
                                    hdt::RDFParserCallback *parser);
 

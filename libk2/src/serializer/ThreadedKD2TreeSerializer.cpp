@@ -14,17 +14,17 @@
 #include <atomic>
 
 
-k2::ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, long noOfPredicates, long noOfTriples) {
+k2::ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, size_t noOfPredicates, size_t noOfTriples) {
     triples = std::vector<Triple>(noOfTriples);
     matrices = std::vector<LabledMatrix>(noOfPredicates);
     int threads=1;
     if(threaded) {
         threads = std::thread::hardware_concurrency();
     }
-    threadedMatrices = std::vector<std::vector<long>>();
+    threadedMatrices = std::vector<std::vector<size_t>>();
     int count=0;
     for(long i=0;i<threads;i++){
-        threadedMatrices.push_back(std::vector<long>());
+        threadedMatrices.push_back(std::vector<size_t>());
     }
     for(long i=0;i<noOfPredicates;i++){
         threadedMatrices[count++].push_back(i);
@@ -58,9 +58,9 @@ void k2::ThreadedKD2TreeSerializer::serializeMtx(char *out) {
 }
 
 
-void k2::ThreadedKD2TreeSerializer::writeTrees(std::vector<long> *use, std::vector<LabledMatrix> *matrices, std::ofstream &outfile, std::promise<void> pt){
+void k2::ThreadedKD2TreeSerializer::writeTrees(std::vector<size_t> *use, std::vector<LabledMatrix> *matrices, std::ofstream &outfile, std::promise<void> pt){
     long x = 0;
-    for (unsigned long u = 0; u < use->size(); u++) {
+    for (size_t u = 0; u < use->size(); u++) {
         long current = (*use)[u];
         LabledMatrix matrix = (*matrices)[current];
         TreeNode::TreeNodeBuffer nodeBuffer{};
@@ -132,7 +132,7 @@ void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::T
     TreeNode * root = &treeNodeBuffer.getTreeNode(0);
     merge(root, hMap, 0, h, treeNodeBuffer);
 */
-    std::vector<unsigned char> baos = std::vector<unsigned char>();
+    std::vector<u_char> baos = std::vector<u_char>();
 
     u_char asH = h;
     std::atomic_uchar last = 0;
@@ -143,25 +143,25 @@ void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::T
     }
     //Write evertyhing
     mtx.lock();
-    long label = matrix.getLabel();
+    u_int32_t label = matrix.getLabel();
 
  /*   for(char i=(sizeof(long)-1)*8;i>=0;i-=8){
         u_char ch = (label >> i);
         u_char w= (ch & 255);
         outfile << (char) w;
     }*/
-    for(char i=0;i<=(sizeof(long)-1)*8;i+=8){
+    for(char i=0;i<=(sizeof(label)-1)*8;i+=8){
         u_char w= ((label >> i) & 255);
         outfile << (char) w;
     }
     outfile << asH;
-    for (unsigned int j = 0; j < baos.size(); j++) {
+    for (size_t j = 0; j < baos.size(); j++) {
         outfile << baos[j];
     }
     mtx.unlock();
 }
 
-bool k2::ThreadedKD2TreeSerializer::merge(TreeNode root, std::vector<unsigned char> &baos, bool shift, std::atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer){
+bool k2::ThreadedKD2TreeSerializer::merge(TreeNode root, std::vector<u_char> &baos, bool shift, std::atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer){
     if(!bool(root) || root.isLeaf(treeNodeBuffer)){
         return shift;
     }
@@ -199,9 +199,9 @@ std::vector<unsigned char> intToBytes(int paramInt)
     return arrayOfByte;
 }
 
-char k2::ThreadedKD2TreeSerializer::getNode(const Point &p, long c1, long r1, long c2, long r2){
-    unsigned long rCenter = (r2 - r1) / 2 + r1;
-    unsigned long cCenter = (c2 - c1) / 2 + c1;
+char k2::ThreadedKD2TreeSerializer::getNode(const Point &p, size_t c1, size_t r1, size_t c2, size_t r2){
+    size_t rCenter = (r2 - r1) / 2 + r1;
+    size_t cCenter = (c2 - c1) / 2 + c1;
     if(p.getCol()<cCenter && p.getRow() <rCenter){
         return 0;
     }
@@ -216,16 +216,17 @@ char k2::ThreadedKD2TreeSerializer::getNode(const Point &p, long c1, long r1, lo
     }
 }
 
-void k2::ThreadedKD2TreeSerializer::initSpace(std::vector<long> *sizeList) {
-    for(unsigned int i=0;i<matrices.size();i++){
+void k2::ThreadedKD2TreeSerializer::initSpace(std::vector<size_t> *sizeList) {
+    for(u_int32_t i=0;i<matrices.size();i++){
         matrices[i]=LabledMatrix(i, (*sizeList)[i]);
     }
 }
 
 void k2::ThreadedKD2TreeSerializer::flush() {
-    unsigned long count=0;
+    size_t count=0;
     for(auto & triple : triples){
-        matrices[triple.get(1)].set(triple.get(0), triple.get(2));
+        u_int32_t predicate = static_cast<u_int32_t>(triple.get(1));
+        matrices[predicate].set(triple.get(0), triple.get(2));
         count++;
         if(count %100000==0){
             std::cout << "\rwrote " << count << " triples to matrix.";
@@ -235,7 +236,7 @@ void k2::ThreadedKD2TreeSerializer::flush() {
     triples.clear();
 }
 
-void k2::ThreadedKD2TreeSerializer::add(long sID, long pID, long oID){
+void k2::ThreadedKD2TreeSerializer::add(size_t sID, size_t pID, size_t oID){
     Triple triple = Triple(sID, pID, oID);
     triples[tripleCount++] = triple;
 }

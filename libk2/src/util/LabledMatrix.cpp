@@ -7,11 +7,11 @@
 #include "Point.h"
 #include <math.h>
 
-k2::LabledMatrix::LabledMatrix(long pID) {
+k2::LabledMatrix::LabledMatrix(u_int32_t pID) {
     this->pID=pID;
 }
 
-k2::LabledMatrix::LabledMatrix(long pID, long size) {
+k2::LabledMatrix::LabledMatrix(u_int32_t pID, long size) {
     this->pID=pID;
     this->matrix = std::vector<Point>(size);
 }
@@ -38,7 +38,7 @@ void k2::LabledMatrix::set(unsigned long sID, unsigned long oID) {
     }
 }
 
-long k2::LabledMatrix::getLabel() {
+u_int32_t k2::LabledMatrix::getLabel() {
     return pID;
 }
 

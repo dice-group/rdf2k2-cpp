@@ -1,7 +1,6 @@
 #include "IntBasedIndexer.hpp"
 #include <memory>
 #include <RDFParser.hpp>
-#include "RDFCallbackIndex.h"
 #include <FourSectionDictionary.hpp>
 #include <HDTVocabulary.hpp>
 
@@ -11,8 +10,8 @@ k2::IntBasedIndexer::IntBasedIndexer(hdt::PlainDictionary *pDictionary, hdt::Dic
     this->dictionary = pDict;
 }
 
-std::vector<long> *k2::IntBasedIndexer::indexTriples(std::shared_ptr<std::vector<k2::DictEntryTriple *>> &triples, char* rdfFile, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
-    std::vector<long> *sizeList = new std::vector<long>(this->dict->getNpredicates());
+std::vector<size_t> *k2::IntBasedIndexer::indexTriples(std::shared_ptr<std::vector<k2::DictEntryTriple *>> &triples, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
+    std::vector<size_t> *sizeList = new std::vector<size_t>(this->dict->getNpredicates());
 
     size_t count=0;
     for(const k2::DictEntryTriple *entry: *triples){

@@ -13,9 +13,9 @@ namespace k2 {
     public:
         LabledMatrix();
 
-        LabledMatrix(long pID);
+        LabledMatrix(u_int32_t pID);
 
-        LabledMatrix(long pID, long size);
+        LabledMatrix(u_int32_t pID, long size);
 
         void set(unsigned long sID, unsigned long oID);
 
@@ -23,7 +23,7 @@ namespace k2 {
 
         double getH();
 
-        long getLabel();
+        u_int32_t getLabel();
 
         void clear();
 
@@ -33,9 +33,9 @@ namespace k2 {
 
     private:
         //TODO it so unlikely that pID will get over Int, we can safely use u_int32_t
-        long pID;
+        u_int32_t pID;
         double h = -1;
-        unsigned long pointCount = 0;
+        size_t pointCount = 0;
         u_long min = 4'294'967'295;
     };
 }

@@ -66,13 +66,13 @@ namespace k2 {
             }
         };
 
-        TreeNode setChildIfAbsent(int i, TreeNodeBuffer &treeNodeBuffer);
+        TreeNode setChildIfAbsent(size_t i, TreeNodeBuffer &treeNodeBuffer);
 
-        TreeNode getChild(int i, TreeNodeBuffer &treeNodeBuffer);
+        TreeNode getChild(size_t i, TreeNodeBuffer &treeNodeBuffer);
 
         void clear(TreeNodeBuffer &treeNodeBuffer);
 
-        [[nodiscard]] unsigned char getRawValue(bool reverse, TreeNodeBuffer &treeNodeBuffer) const;
+        [[nodiscard]] u_char getRawValue(bool reverse, TreeNodeBuffer &treeNodeBuffer) const;
 
         bool isLeaf(TreeNodeBuffer &treeNodeBuffer);
 

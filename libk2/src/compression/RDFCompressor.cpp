@@ -43,7 +43,7 @@ void k2::RDFCompressor::compressRDF(char *in, char *out) {
     IntBasedIndexer index = IntBasedIndexer(dict, dictionary);
 
     ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded, dict->getNpredicates(), noOfTriples);
-    std::vector<long> *sizeList = index.indexTriples(triples, in, serializer, notation, parser);
+    std::vector<size_t> *sizeList = index.indexTriples(triples, serializer, notation, parser);
     for(size_t x=0 ; x< triples->size(); x++){
         (*triples)[x]->clear();
         delete (*triples)[x];
@@ -84,7 +84,7 @@ void k2::RDFCompressor::compressRDF(char *in, char *out) {
 }
 
 void k2::RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries) {
-    long triples = 0;
+    size_t triples = 0;
     k2::Loader callback(dict, tripleEntries);
     dict->startProcessing();
     parser->doParse(in, "<http://base.com>", notation, true, &callback);

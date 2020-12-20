@@ -16,6 +16,7 @@
 #include "../util/RDFTools.h"
 #include <regex>
 #include <chrono>
+#include <cmath>
 
 #include "../io/ByteBuffer.h"
 
@@ -93,13 +94,13 @@ void  k2::RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &di
     hdt::ControlInformation ci =hdt::ControlInformation();
     ci.setFormat(dict.getType());
 
-    unsigned char * memblock;
+    u_char * memblock;
     std::streampos size;
     std::ifstream file (dictIn, std::ios::in|std::ios::binary|std::ios::ate);
     if (file.is_open())
     {
         size = file.tellg();
-        memblock = new unsigned char [size];
+        memblock = new u_char [size];
         file.seekg (0, std::ios::beg);
         file.read ((char *)memblock, size);
         file.close();
@@ -112,7 +113,7 @@ void  k2::RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &di
 void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
     std::ifstream file (in, std::ios::in|std::ios::binary|std::ios::ate);
     std::streampos size;
-    //TODO instead of getting each single byte, use ByteBuffer to fasten up process.
+
     if (file.is_open()) {
         //read long, read h
         size = file.tellg();
@@ -120,7 +121,7 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
         size_t s = 1*size;
         k2::ByteBuffer byteBuffer{&file, s};
         bool matrixEnd;
-        u_char pLabel[sizeof(long)];
+        u_char pLabel[sizeof(u_int32_t)];
         size_t count=0;
         //file.eof or file.good won't work here
         //while (!byteBuffer.eos()){
@@ -130,11 +131,15 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
             size_t pLabelLen= sizeof(pLabel);
             //file.read((char *) &pLabel, sizeof(pLabel));
             byteBuffer.next(pLabelLen, (u_char *) &pLabel);
-
             count+=sizeof(pLabel);
-            long label;
+            u_int32_t label=0;
+            //use this instead of memcpy so we don't have to care about little/big endian
+            for(u_char byteShift=0;byteShift<sizeof(label);byteShift++){
+                u_int32_t add = pLabel[byteShift] << byteShift*8;
+                label += add;
+            }
             //convert pLabel to label.
-            std::memcpy(&label, &pLabel, sizeof pLabel);
+            //std::memcpy(&label, &pLabel, sizeof pLabel);
             //long label = *((long *)pLabel);
 
             LabledMatrix matrix{label};
@@ -143,12 +148,12 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
             byteBuffer.next(1, h);
             //file.read((char *) h, 1);
             count++;
-            u_int32_t hSize = 1*h[0];
+            u_char hSize = 1*h[0];
 
-            u_int32_t k = hSize;
+            u_char k = hSize;
             //here begins the while loop
             Path p{hSize};
-            u_int32_t j = 0;
+            u_char j = 0;
             int x=0;
             do {
                 if (p.hasLast()) {
@@ -158,7 +163,7 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                     j++;
                 }
                 u_char b[1];
-                for (u_int32_t i = j; i < k; i += 2) {
+                for (u_char i = j; i < k; i += 2) {
 
                     //file.read((char *) b, sizeof(u_char));
                     byteBuffer.next(1, b);
