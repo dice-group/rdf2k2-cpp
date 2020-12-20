@@ -14,6 +14,7 @@
 #include "../util/Stats.h"
 #include "../dict/Loader.h"
 #include "../dict/PlainDictionaryPlus.h"
+#include "../io/RDFSimpleParser.h"
 
 k2::RDFCompressor::RDFCompressor(bool threaded) {
     this->threaded = threaded;
@@ -25,7 +26,8 @@ k2::RDFCompressor::RDFCompressor(bool threaded) {
 void k2::RDFCompressor::compressRDF(char *in, char *out) {
     printMem("Start: ");
     hdt::RDFNotation notation = guessNotation(in);
-    auto *parser = hdt::RDFParserCallback::getParserCallback(notation);
+    //auto *parser = hdt::RDFParserCallback::getParserCallback(notation);
+    hdt::RDFParserCallback *parser = new RDFSimpleParser();
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
 
