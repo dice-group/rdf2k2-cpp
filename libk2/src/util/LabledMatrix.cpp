@@ -18,7 +18,7 @@ k2::LabledMatrix::LabledMatrix(u_int32_t pID, size_t size) {
 
 k2::LabledMatrix::LabledMatrix() {}
 
-void k2::LabledMatrix::addPoint(Point &p){
+void k2::LabledMatrix::addPoint(const Point &p){
     matrix.push_back(p);
 }
 

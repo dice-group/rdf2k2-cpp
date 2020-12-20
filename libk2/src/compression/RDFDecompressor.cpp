@@ -154,7 +154,7 @@ void k2::RDFDecompressor::readK2(char *in, std::vector<LabledMatrix>& matrices){
                     count++;
                     p.add(i, b[0]);
                 }
-                for(Point &point : p.calculatePoints()){
+                for(const Point &point : p.calculatePoints()){
                     matrix.addPoint(point);
                 }
                 j = hSize-1;

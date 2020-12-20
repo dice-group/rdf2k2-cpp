@@ -29,7 +29,7 @@ namespace k2 {
 
         std::vector<Point> matrix;
 
-        void addPoint(Point &p);
+        void addPoint(const Point &p);
 
     private:
         //TODO it so unlikely that pID will get over Int, we can safely use u_int32_t

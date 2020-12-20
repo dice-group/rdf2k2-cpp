@@ -22,13 +22,13 @@ namespace k2 {
         void processTriple(const hdt::TripleString &triple, unsigned long long pos) override;
 
         PlainDictionaryPlus *dict;
-        long count;
+        size_t count;
 
-        long getCount();
+        size_t getCount();
 
         std::shared_ptr<vector<DictEntryTriple *>> triples;
-
-    private:
+        size_t timeMSindex=0;
+        size_t timeMSpush=0;
 
     };
 

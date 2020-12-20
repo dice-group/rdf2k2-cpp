@@ -86,11 +86,19 @@ void k2::RDFCompressor::compressRDF(char *in, char *out) {
 void k2::RDFCompressor::readFile(const char *in, hdt::RDFNotation notation, hdt::RDFParserCallback *parser, std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries) {
     size_t triples = 0;
     k2::Loader callback(dict, tripleEntries);
+    std::chrono::high_resolution_clock::time_point p1 = std::chrono::high_resolution_clock::now();
     dict->startProcessing();
     parser->doParse(in, "<http://base.com>", notation, true, &callback);
     triples = callback.getCount();
     std::cout << "\rLoaded " << triples << " triples in total." << std::endl;
+    std::chrono::high_resolution_clock::time_point p2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, milli> time_span = p2 - p1;
+    std::cout << "reading and temp indexing took " << time_span.count() << "ms [indexing: " << callback.timeMSindex << "ms, push: " <<callback.timeMSpush << "ms]" << std::endl;
     dict->stopProcessing();
+    p1 = std::chrono::high_resolution_clock::now();
+    time_span = p1 - p2;
+    std::cout << "sorting index took " << time_span.count() << "ms" << std::endl;
+
     //return triples;
 }
 
