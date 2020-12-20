@@ -23,7 +23,7 @@ k2::ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, size_t n
     }
     threadedMatrices = std::vector<std::vector<size_t>>();
     int count=0;
-    for(int i=0;i<threads;i++){
+    for(u_int i=0;i<threads;i++){
         threadedMatrices.push_back(std::vector<size_t>());
     }
     for(size_t i=0;i<noOfPredicates;i++){
@@ -59,9 +59,9 @@ void k2::ThreadedKD2TreeSerializer::serializeMtx(char *out) {
 
 
 void k2::ThreadedKD2TreeSerializer::writeTrees(std::vector<size_t> *use, std::vector<LabledMatrix> *matrices, std::ofstream &outfile, std::promise<void> pt){
-    long x = 0;
+    size_t x = 0;
     for (size_t u = 0; u < use->size(); u++) {
-        long current = (*use)[u];
+        size_t current = (*use)[u];
         LabledMatrix matrix = (*matrices)[current];
         TreeNode::TreeNodeBuffer nodeBuffer{};
         createTree(matrix, nodeBuffer, outfile);
@@ -83,13 +83,13 @@ void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::T
 	TreeNode root = treeNodeBuffer.constructTreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
-    long count=0;
+    size_t count=0;
 
     for(const Point &p :matrix.getPoints()){
-        long c1=0 ;
-        long r1=0;
-        long c2=size;
-        long r2=size;
+        size_t c1=0 ;
+        size_t r1=0;
+        size_t c2=size;
+        size_t r2=size;
         count++;
 
         TreeNode pnode = root;
