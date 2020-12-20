@@ -10,7 +10,7 @@ k2::IntBasedIndexer::IntBasedIndexer(hdt::PlainDictionary *pDictionary, hdt::Dic
     this->dictionary = pDict;
 }
 
-std::vector<size_t> *k2::IntBasedIndexer::indexTriples(std::shared_ptr<std::vector<k2::DictEntryTriple *>> &triples, ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation notation,hdt::RDFParserCallback *parser){
+std::vector<size_t> *k2::IntBasedIndexer::indexTriples(std::shared_ptr<std::vector<k2::DictEntryTriple *>> &triples, ThreadedKD2TreeSerializer *serializer){
     std::vector<size_t> *sizeList = new std::vector<size_t>(this->dict->getNpredicates());
 
     size_t count=0;

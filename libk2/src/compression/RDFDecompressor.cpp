@@ -80,7 +80,7 @@ void  k2::RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &di
     hdt::ControlInformation ci =hdt::ControlInformation();
     ci.setFormat(dict.getType());
 
-    u_char * memblock;
+    u_char * memblock{};
     std::streampos size;
     std::ifstream file (dictIn, std::ios::in|std::ios::binary|std::ios::ate);
     if (file.is_open())
@@ -90,9 +90,11 @@ void  k2::RDFDecompressor::readDict(char *dictIn, hdt::FourSectionDictionary &di
         file.seekg (0, std::ios::beg);
         file.read ((char *)memblock, size);
         file.close();
+        dict.load(memblock, memblock+size);
     }
-    dict.load(memblock, memblock+size);
-    file.close();
+    else{
+        throw std::logic_error{"Dictionary could not be read, as file couldn't be opened/found."};
+    }
 }
 
 

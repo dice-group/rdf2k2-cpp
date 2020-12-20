@@ -23,10 +23,10 @@ k2::ThreadedKD2TreeSerializer::ThreadedKD2TreeSerializer(bool threaded, size_t n
     }
     threadedMatrices = std::vector<std::vector<size_t>>();
     int count=0;
-    for(long i=0;i<threads;i++){
+    for(int i=0;i<threads;i++){
         threadedMatrices.push_back(std::vector<size_t>());
     }
-    for(long i=0;i<noOfPredicates;i++){
+    for(size_t i=0;i<noOfPredicates;i++){
         threadedMatrices[count++].push_back(i);
         if(count>=threads){
             count =0;
@@ -83,7 +83,6 @@ void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::T
 	TreeNode root = treeNodeBuffer.constructTreeNode();
     double h = matrix.getH();
     double size = pow(2, h);
-    long mSize=matrix.getPoints().size();
     long count=0;
 
     for(const Point &p :matrix.getPoints()){
@@ -138,7 +137,7 @@ void k2::ThreadedKD2TreeSerializer::createTree(LabledMatrix &matrix, TreeNode::T
     mtx.lock();
     u_int32_t label = matrix.getLabel();
 
-    for(char i=0;i<=(sizeof(label)-1)*8;i+=8){
+    for(u_char i=0;i<=(sizeof(label)-1)*8;i+=8){
         u_char w= ((label >> i) & 255);
         outfile << (char) w;
     }

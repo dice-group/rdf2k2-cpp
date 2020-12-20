@@ -9,9 +9,6 @@ std::string k2::RDFTools::getTerm(std::string term){
     if(term.starts_with("\"")){
         auto last =term.find_last_of("\"")-1;
         std::string test = term.substr(1, last);
-        if(test.find("\"")!=test.npos){
-            test;
-        }
         k2::StringUtils::replace(test, "\\", "\\\\");
         k2::StringUtils::replace(test, "\"", "\\\"");
         k2::StringUtils::replace(test, "\n", "\\n");

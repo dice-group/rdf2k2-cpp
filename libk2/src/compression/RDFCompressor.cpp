@@ -45,7 +45,7 @@ void k2::RDFCompressor::compressRDF(char *in, char *out) {
     IntBasedIndexer index = IntBasedIndexer(dict, dictionary);
 
     ThreadedKD2TreeSerializer *serializer = new ThreadedKD2TreeSerializer(threaded, dict->getNpredicates(), noOfTriples);
-    std::vector<size_t> *sizeList = index.indexTriples(triples, serializer, notation, parser);
+    std::vector<size_t> *sizeList = index.indexTriples(triples, serializer);
     for(size_t x=0 ; x< triples->size(); x++){
         (*triples)[x]->clear();
         delete (*triples)[x];

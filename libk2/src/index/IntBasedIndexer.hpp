@@ -19,8 +19,7 @@ namespace k2 {
         void load();
 
         vector<size_t> *indexTriples(std::shared_ptr<std::vector<k2::DictEntryTriple *>> &triples,
-                                   ThreadedKD2TreeSerializer *serializer, hdt::RDFNotation,
-                                   hdt::RDFParserCallback *parser);
+                                   ThreadedKD2TreeSerializer *serializer);
 
     private:
 //        long noOfPredicates;
