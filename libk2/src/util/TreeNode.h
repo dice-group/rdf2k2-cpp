@@ -7,54 +7,79 @@
 
 #include <memory>
 #include <vector>
+#include <cstdio>
+#include <cstdint>
 
-using namespace std;
+namespace k2 {
 
-class TreeNode {
-
-public:
-    class TreeNodeBuffer {
-        vector<TreeNode> buffer;
-        size_t position = 0;
+    class TreeNode {
     public:
-        explicit TreeNodeBuffer(size_t initialSize = 10'000L) {
-            buffer.reserve(initialSize);
-        }
+        static constexpr size_t NO_CHILD_NODE = (1UL << 48) - 1;
 
-        [[maybe_unused]] TreeNode &constructTreeNode() {
-            buffer.push_back(TreeNode{});
-            return buffer[position++];
-        }
+        TreeNode() = default;
 
-        [[maybe_unused]] TreeNode &getTreeNode(const size_t pos) {
-            return buffer[pos];
-        }
+        TreeNode(size_t id);
 
-        [[nodiscard]] size_t lastPos() const  {
-            return position-1;
-        }
-    };
+        operator size_t() const;
 
-    TreeNode *setChildIfAbsent(int i, TreeNodeBuffer& treeNodeBuffer);
+        explicit operator bool() const;
 
-    TreeNode *getChild(int i, TreeNodeBuffer& treeNodeBuffer);
+        struct ValueType {
+            u_char value: 4 = 0;
+        } __attribute__((packed));
 
-    void clear();
+        class TreeNodeBuffer {
+            std::array<std::vector<TreeNode>, 4> children_buffer;
+            std::vector<ValueType> values_buffer;
+            size_t position = 0;
+        public:
+            explicit TreeNodeBuffer(size_t initialSize = 8L) {
+                for (auto &child_buffer  : children_buffer)
+                    child_buffer.reserve(initialSize);
+                values_buffer.reserve(initialSize);
+            }
 
-    [[nodiscard]] unsigned char getRawValue(bool reverse) const;
+            [[maybe_unused]] TreeNode constructTreeNode() {
+                for (auto &child_buffer  : children_buffer)
+                    child_buffer.emplace_back();
+                values_buffer.emplace_back();
+                return position++;
+            }
 
-    bool isLeaf();
+            void clearTreeNode(TreeNode treeNode) {
+                for (auto &child_buffer  : children_buffer)
+                    child_buffer[treeNode] = NO_CHILD_NODE;
+                values_buffer[treeNode].value = 0;
+            }
 
-private:
-    static constexpr size_t NO_CHILD_NODE = std::numeric_limits<size_t>::max();
-    // uint32_t statt size_t könnte statt size_t verwendet werden um den Speicherbedarf auf ca. 3/5 zu senken
-    size_t children[4]{NO_CHILD_NODE, NO_CHILD_NODE, NO_CHILD_NODE, NO_CHILD_NODE};
-    // Für maximales Speicher sparen müsste das hier in ein eigenes Array ausgelagert werden.
-    unsigned char value = 0;
+            [[maybe_unused]] TreeNode &getTreeNodeChild(TreeNode treeNode, const size_t i) {
 
-    //11000000 00110000 00001100 00000011
+                return children_buffer[i][treeNode];
+            }
 
-};
+            [[maybe_unused]] ValueType &getTreeNodeValue(TreeNode treeNode) {
+                return values_buffer[treeNode];
+            }
 
+            [[nodiscard]] size_t lastPos() const {
+                return position - 1;
+            }
+        };
 
+        TreeNode setChildIfAbsent(size_t i, TreeNodeBuffer &treeNodeBuffer);
+
+        TreeNode getChild(size_t i, TreeNodeBuffer &treeNodeBuffer);
+
+        void clear(TreeNodeBuffer &treeNodeBuffer);
+
+        [[nodiscard]] u_char getRawValue(bool reverse, TreeNodeBuffer &treeNodeBuffer) const;
+
+        bool isLeaf(TreeNodeBuffer &treeNodeBuffer);
+
+    private:
+        size_t id: 48 = NO_CHILD_NODE;
+
+    } __attribute__((packed));
+
+}
 #endif //RDF2K2_CPP_TREENODE_H

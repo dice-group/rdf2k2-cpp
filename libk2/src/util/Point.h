@@ -5,17 +5,24 @@
 #ifndef RDF2K2_CPP_POINT_H
 #define RDF2K2_CPP_POINT_H
 
+#include <cstddef>
 
-class Point {
-public:
-    Point(long sID, long oID);
-    Point();
-    long getCol() const;
-    long getRow() const;
-private:
-    long sID;
-    long oID;
-};
+namespace k2 {
 
+    class Point {
+    public:
+        Point(size_t sID, size_t oID);
+
+        Point();
+
+        unsigned long getCol() const;
+
+        unsigned long getRow() const;
+
+    private:
+        unsigned long sID;
+        unsigned long oID;
+    };
+}
 
 #endif //RDF2K2_CPP_POINT_H

@@ -7,20 +7,19 @@
 #include <fstream>
 
 #include "../compression/RDFCompressor.hpp"
+#include "../compression/RDFDecompressor.h"
 
-
-using namespace std;
 
 void printHelp(){
-    cout << "rdf2k2 [-c|-d] options [-kd2|-tkd2] in out" << endl;
-	cout << "\t-c\tcompress RDF File" << endl;
-	cout << "\t-d\tdecompress GRP File" << endl;
-	cout << endl;
-	cout << "\t-kd2\t(de)serialize using KD2 TREE" << endl;
-	cout << "\t-tkd2\t(de)serialize using Threaded KD2 Tree" << endl;
-	cout << endl;
-	cout << "\tDecompress Options" << endl;
-	cout << "\t-out: N-TRIPLE, TURTLE, RDF/XML - will save output in the format specified" << endl;
+    std::cout << "rdf2k2 [-c|-d] options [-kd2|-tkd2] in out" << std::endl;
+    std::cout << "\t-c\tcompress RDF File" << std::endl;
+    std::cout << "\t-d\tdecompress GRP File" << std::endl;
+    std::cout << std::endl;
+    std::cout << "\t-kd2\t(de)serialize using KD2 TREE" << std::endl;
+    std::cout << "\t-tkd2\t(de)serialize using Threaded KD2 Tree" << std::endl;
+    std::cout << std::endl;
+    std::cout << "\tDecompress Options" << std::endl;
+    std::cout << "\t-out: N-TRIPLE, TURTLE, RDF/XML - will save output in the format specified" << std::endl;
 }
 
 long getFileSize(char *in){
@@ -28,24 +27,29 @@ long getFileSize(char *in){
 }
 
 void compress(char *in, char *out, bool threaded){
-    chrono::high_resolution_clock::time_point start = chrono::high_resolution_clock::now();            
-    cout << "Starting compression for file " << in << endl;
-    cout << "Current path " << filesystem::current_path() << endl;
-    RDFCompressor *compressor = new RDFCompressor(threaded);
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    std::cout << "Starting compression for file " << in << std::endl;
+    k2::RDFCompressor *compressor = new k2::RDFCompressor(threaded);
     compressor->compressRDF(in, out);
-    chrono::high_resolution_clock::time_point end = chrono::high_resolution_clock::now();     
-    chrono::duration<double, milli> time_span = end - start;
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, milli> time_span = end - start;
     long totalFileSize = getFileSize(out);
     char dictOut[sizeof(out)+5];
     strcpy(dictOut,out);
     strcat(dictOut, ".dict");
     totalFileSize += getFileSize(dictOut);
     double ratio = totalFileSize* 1.0/ getFileSize(in);
-    cout << "Finished compression to " << out << "[.dict] took " << time_span.count() << "ms " << " with a " << ratio << " ratio" << endl;
+    std::cout << "Finished compression to " << out << "[.dict] took " << time_span.count() << "ms " << " with a " << ratio << " ratio" << std::endl;
 }
 
 void decompress(char *in, char *out, bool threaded, string format){
-
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    cout << "Starting decompression for file " << in << std::endl;
+    k2::RDFDecompressor *decompressor = new k2::RDFDecompressor();
+    decompressor->writeRDF(in, out);
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, milli> time_span = end - start;
+    std::cout << "Finished decompression to " << out << " took " << time_span.count() << "ms " << std::endl;
 }
 
 int main(int argc, char *argv[]){
@@ -73,7 +77,7 @@ int main(int argc, char *argv[]){
     }
     else if(strcmp(argv[1], "-d") == 0){
         int x = 2;
-        string format = "N-TRIPLE";
+        std::string format = "N-TRIPLE";
 
         if(strcmp(argv[x], "-out") == 0){
             x+=2;

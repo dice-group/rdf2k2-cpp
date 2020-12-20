@@ -5,18 +5,23 @@
 #ifndef RDF2K2_CPP_TRIPLE_H
 #define RDF2K2_CPP_TRIPLE_H
 
+#include <cstdlib>
 
-class Triple {
-public:
-    Triple(long s, long p, long o);
-    Triple();
-    long get(int i);
+namespace k2 {
 
-private:
-    long sID;
-    long pID;
-    long oID;
-};
+    class Triple {
+    public:
+        Triple(size_t s, size_t p, size_t o);
 
+        Triple();
+
+        size_t get(u_char i);
+
+    private:
+        long sID;
+        long pID;
+        long oID;
+    };
+}
 
 #endif //RDF2K2_CPP_TRIPLE_H

@@ -5,19 +5,25 @@
 #include <PlainDictionary.hpp>
 #include <FourSectionDictionary.hpp>
 #include <RDFParser.hpp>
+#include "../util/DictEntryTriple.h"
+#include "../dict/PlainDictionaryPlus.h"
 
-class RDFCompressor {
-    public: 
+namespace k2 {
+    class RDFCompressor {
+    public:
         RDFCompressor(bool threaded);
+
         void compressRDF(char *in, char *out);
 
     private:
         bool threaded;
-        hdt::PlainDictionary *dict;
+        PlainDictionaryPlus *dict;
         hdt::Dictionary *dictionary;
-        long readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser);
 
-        hdt::RDFNotation guessNotation(const char *in);
-};
+        void readFile(const char *in, hdt::RDFNotation, hdt::RDFParserCallback *parser,
+                      std::shared_ptr<std::vector<DictEntryTriple *>> &tripleEntries);
 
+        hdt::RDFNotation guessNotation(const char *in) const;
+    };
+}
 #endif //RDF2K2_CPP_RDFCOMPRESSOR_H

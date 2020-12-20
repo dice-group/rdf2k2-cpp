@@ -11,25 +11,37 @@
 #include "../util/TreeNode.h"
 #include <mutex>
 #include <atomic>
+namespace k2 {
 
-class ThreadedKD2TreeSerializer {
+    class ThreadedKD2TreeSerializer {
     public:
-        void add(long sID, long pID, long oID);
-        ThreadedKD2TreeSerializer(bool threaded, long predicates, long triples);
+        void add(size_t sID, size_t pID, size_t oID);
+
+        ThreadedKD2TreeSerializer(bool threaded, size_t predicates, size_t triples);
+
         void flush();
-        void initSpace(std::vector<long> *sizeList);
+
+        void initSpace(std::vector<size_t> *sizeList);
+
         void serializeMtx(char *out);
 
-private:
+    private:
         std::vector<Triple> triples;
         std::vector<LabledMatrix> matrices;
-        std::vector<std::vector<long>> threadedMatrices;
-        void createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, ofstream &outfile);
-        char getNode(const Point &p, long c1, long r1, long c2, long r2);
-        bool merge(TreeNode *root, vector<unsigned char> &baos, bool shift, atomic_uchar &last, TreeNode::TreeNodeBuffer& treeNodeBuffer);
-        long tripleCount=0;
-        mutex mtx;
-    void writeTrees(vector<long> *use, vector<LabledMatrix> *matrices, ofstream &outfile, promise<void> pt);
-};
+        std::vector<std::vector<size_t>> threadedMatrices;
 
+        void createTree(LabledMatrix &matrix, TreeNode::TreeNodeBuffer &treeNodeBuffer, std::ofstream &outfile);
+
+        char getNode(const Point &p, size_t c1, size_t r1, size_t c2, size_t r2) const;
+
+        bool merge(TreeNode root, std::vector<u_char> &baos, bool shift, std::atomic_uchar &last,
+                   TreeNode::TreeNodeBuffer &treeNodeBuffer);
+
+        long tripleCount = 0;
+        std::mutex mtx;
+
+        void writeTrees(std::vector<size_t> *use, std::vector<LabledMatrix> *matrices, std::ofstream &outfile,
+                        std::promise<void> pt);
+    };
+}
 #endif //RDF2K2_CPP_ThreadedKD2TreeSerializer_H

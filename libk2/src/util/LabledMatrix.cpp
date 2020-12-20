@@ -6,22 +6,23 @@
 #include <vector>
 #include "Point.h"
 #include <math.h>
-using namespace std;
 
-LabledMatrix::LabledMatrix(long pID) {
+k2::LabledMatrix::LabledMatrix(u_int32_t pID) {
     this->pID=pID;
 }
 
-LabledMatrix::LabledMatrix(long pID, long size) {
+k2::LabledMatrix::LabledMatrix(u_int32_t pID, size_t size) {
     this->pID=pID;
-    this->matrix = vector<Point>(size);
+    this->matrix = std::vector<Point>(size);
 }
 
-LabledMatrix::LabledMatrix() {}
+k2::LabledMatrix::LabledMatrix() {}
 
+void k2::LabledMatrix::addPoint(const Point &p){
+    matrix.push_back(p);
+}
 
-
-void LabledMatrix::set(long sID, long oID) {
+void k2::LabledMatrix::set(size_t sID, size_t oID) {
     matrix[pointCount++] =Point(sID, oID);
     if(sID>h){
         h = sID;
@@ -31,19 +32,19 @@ void LabledMatrix::set(long sID, long oID) {
     }
 }
 
-long LabledMatrix::getLabel() {
+u_int32_t k2::LabledMatrix::getLabel() const {
     return pID;
 }
 
-const  vector<Point> &LabledMatrix::getPoints(){
+const  std::vector<k2::Point> &k2::LabledMatrix::getPoints() const{
     return this->matrix;
 }
 
-double LabledMatrix::getH(){
+double k2::LabledMatrix::getH() const{
     return ceil(log2(h+1));
 }
 
-void LabledMatrix::clear() {
+void k2::LabledMatrix::clear() {
     this->matrix.clear();
 
 }

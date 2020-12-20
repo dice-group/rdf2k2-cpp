@@ -5,23 +5,21 @@
 #ifndef RDF2K2_CPP_STATS_H
 #define RDF2K2_CPP_STATS_H
 
-#include "stdlib.h"
-#include "stdio.h"
-#include "string.h"
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <sys/sysinfo.h>
 
-using namespace std;
+    int parseLine(char *line);
+
+    int getValue();
 
 
-int parseLine(char* line);
+    long getTotalMemory();
 
-int getValue();
+    long getVirtMemoryUsed();
 
-
-long getTotalMemory();
-
-long getVirtMemoryUsed();
-void printMem(char * prefix="");
+    void printMem(const std::string &prefix = "");
 
 #endif //RDF2K2_CPP_STATS_H
