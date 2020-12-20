@@ -6,6 +6,7 @@
 #define RDF2K2_CPP_BYTEBUFFER_H
 
 #include <istream>
+#include <vector>
 
 namespace k2 {
     class ByteBuffer {
@@ -17,12 +18,12 @@ namespace k2 {
         bool eos();
 
     private:
-        u_char buffer[1024];
         size_t pointer = 0;
         std::istream *istream;
         size_t len;
         size_t bufferSize;
         size_t count=0;
+        std::vector<u_char> buffer;
 
         void fillBuffer();
     };
