@@ -45,7 +45,7 @@ You can get precompressed datasets at https://hobbitdata.informatik.uni-leipzig.
 
 # Troubleshooting
 
-###GLIBCXX not found
+### GLIBCXX not found
 
 ```
 rdf2k2-cpp/build_release/rdf2k2_cpp: /lib/x86_64-linux-gnu/libstdc++.so.6: version `GLIBCXX_3.4.26' not found 
