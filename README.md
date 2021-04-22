@@ -10,6 +10,7 @@ For the java version visit https://github.com/dice-group/GraphCompression
 # Build
 
 ```
+./generateHDTLib.sh # this will generate the HDT files 
 ./build.sh
 ```
 The executable will be in build_release/rdf2k2_cpp 
