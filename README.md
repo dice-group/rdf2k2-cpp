@@ -9,6 +9,16 @@ For the java version visit https://github.com/dice-group/GraphCompression
 
 # Build
 
+First you need to install autoconf and serd
+
+```
+apt-get install autoconf
+```
+
+```
+https://github.com/drobilla/serd
+```
+
 ```
 ./generateHDTLib.sh # this will generate the HDT files 
 ./build.sh
